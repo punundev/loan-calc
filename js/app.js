@@ -12,6 +12,7 @@ const defaultState = {
   processingFee: 0,
   originationFee: 0,
   insuranceFee: 0,
+  otherFee: 0,
   extraPayment: 0,
   gracePeriod: 0,
   balloonPayment: 0,
@@ -326,6 +327,7 @@ function getFormValues() {
     processingFee: parseFloat(document.getElementById("processing-fee").value) || 0,
     originationFee: parseFloat(document.getElementById("origination-fee").value) || 0,
     insuranceFee: parseFloat(document.getElementById("insurance-fee").value) || 0,
+    otherFee: parseFloat(document.getElementById("other-fee").value) || 0,
     extraPayment: parseFloat(document.getElementById("extra-payment").value) || 0,
     gracePeriod: parseFloat(document.getElementById("grace-period").value) || 0,
     balloonPayment: parseFloat(document.getElementById("balloon-payment").value) || 0
@@ -591,6 +593,7 @@ function resetCalculator() {
   document.getElementById("processing-fee").value = defaultState.processingFee;
   document.getElementById("origination-fee").value = defaultState.originationFee;
   document.getElementById("insurance-fee").value = defaultState.insuranceFee;
+  document.getElementById("other-fee").value = defaultState.otherFee;
   document.getElementById("extra-payment").value = defaultState.extraPayment;
   document.getElementById("grace-period").value = defaultState.gracePeriod;
   document.getElementById("balloon-payment").value = defaultState.balloonPayment;
@@ -627,6 +630,7 @@ function saveInputsToStorage() {
     processingFee: document.getElementById("processing-fee")?.value,
     originationFee: document.getElementById("origination-fee")?.value,
     insuranceFee: document.getElementById("insurance-fee")?.value,
+    otherFee: document.getElementById("other-fee")?.value,
     extraPayment: document.getElementById("extra-payment")?.value,
     gracePeriod: document.getElementById("grace-period")?.value,
     balloonPayment: document.getElementById("balloon-payment")?.value,
@@ -656,6 +660,7 @@ function loadInputsFromStorage() {
     if (data.processingFee !== undefined && document.getElementById("processing-fee")) document.getElementById("processing-fee").value = data.processingFee;
     if (data.originationFee !== undefined && document.getElementById("origination-fee")) document.getElementById("origination-fee").value = data.originationFee;
     if (data.insuranceFee !== undefined && document.getElementById("insurance-fee")) document.getElementById("insurance-fee").value = data.insuranceFee;
+    if (data.otherFee !== undefined && document.getElementById("other-fee")) document.getElementById("other-fee").value = data.otherFee;
     if (data.extraPayment !== undefined && document.getElementById("extra-payment")) document.getElementById("extra-payment").value = data.extraPayment;
     if (data.gracePeriod !== undefined && document.getElementById("grace-period")) document.getElementById("grace-period").value = data.gracePeriod;
     if (data.balloonPayment !== undefined && document.getElementById("balloon-payment")) document.getElementById("balloon-payment").value = data.balloonPayment;

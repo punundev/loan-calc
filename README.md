@@ -21,7 +21,7 @@ A modern, fast, and responsive static web application for calculating and analyz
   - Annually (1/year)
 - **Advanced Options**:
   - Extra payments per period with early payoff calculation and interest savings analytics.
-  - Upfront fee accounting (Processing fee, Origination fee, Insurance fee).
+  - Upfront fee accounting (Processing fee, Origination fee, Insurance fee, Other fee).
   - Grace period (interest-only initial periods).
   - Balloon payments at maturity.
 - **Dynamic Payment Schedule**:

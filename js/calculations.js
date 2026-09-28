@@ -10,6 +10,7 @@ function calculateLoan(params) {
     processingFee = 0,
     originationFee = 0,
     insuranceFee = 0,
+    otherFee = 0,
     extraPayment = 0,
     gracePeriod = 0,
     balloonPayment = 0
@@ -36,7 +37,8 @@ function calculateLoan(params) {
   const periodicRate = rate > 0 ? (rate / 100) / periodsPerYear : 0;
   const upfrontFees = Math.max(0, Number(processingFee)) +
                       Math.max(0, Number(originationFee)) +
-                      Math.max(0, Number(insuranceFee));
+                      Math.max(0, Number(insuranceFee)) +
+                      Math.max(0, Number(otherFee));
 
   let calcResult;
 
