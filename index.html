@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title data-i18n="app_title">Loan Calculator</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            khmer: ['"Kantumruy Pro"', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .print-only {
+        display: block !important;
+      }
+      #schedule-section-content {
+        display: block !important;
+      }
+      table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+      }
+      th, td {
+        border: 1px solid #cbd5e1 !important;
+        color: #000000 !important;
+      }
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen font-sans transition-colors duration-200">
+
+  <header class="no-print border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur sticky top-0 z-30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-lg bg-blue-600 text-white flex items-center justify-center font-bold shadow-sm">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+          </svg>
+        </div>
+        <span class="text-lg font-bold text-slate-900 dark:text-white tracking-tight" data-i18n="app_title">Loan Calculator</span>
+      </div>
+
+      <div class="flex items-center gap-2 sm:gap-4">
+        <div>
+          <label for="currency-selector" class="sr-only" data-i18n="currency">Currency</label>
+          <select id="currency-selector" class="text-xs sm:text-sm font-medium bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 dark:text-slate-200">
+            <option value="USD">USD ($)</option>
+            <option value="KHR">KHR (៛)</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="lang-selector" class="sr-only" data-i18n="language">Language</label>
+          <select id="lang-selector" class="text-xs sm:text-sm font-medium bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 dark:text-slate-200">
+            <option value="en">EN</option>
+            <option value="km">ខ្មែរ</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="theme-selector" class="sr-only">Theme</label>
+          <select id="theme-selector" class="text-xs sm:text-sm font-medium bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 dark:text-slate-200">
+            <option value="system" data-i18n="theme_system">System</option>
+            <option value="light" data-i18n="theme_light">Light</option>
+            <option value="dark" data-i18n="theme_dark">Dark</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight" data-i18n="app_title">Loan Calculator</h1>
+      <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 mt-1" data-i18n="app_subtitle">Calculate, analyze, and plan your loan repayments with precision.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <section class="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm p-6 no-print">
+        <form id="loan-form" novalidate>
+          <div class="space-y-5">
+            <div>
+              <label for="loan-type" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1" data-i18n="loan_type">Loan Type</label>
+              <select id="loan-type" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                <option value="reducing" data-i18n="loan_type_reducing">Amortized / Reducing Balance</option>
+                <option value="flat" data-i18n="loan_type_flat">Flat Rate</option>
+                <option value="interest_only" data-i18n="loan_type_interest_only">Interest-Only</option>
+                <option value="bullet" data-i18n="loan_type_bullet">Bullet Loan</option>
+                <option value="simple_interest" data-i18n="loan_type_simple">Simple Interest</option>
+                <option value="custom" data-i18n="loan_type_custom">Custom / Manual</option>
+              </select>
+              <p id="loan-type-desc" class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-lg border border-slate-100 dark:border-slate-800"></p>
+            </div>
+
+            <div>
+              <label for="loan-amount" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1" data-i18n="loan_amount">Loan Amount</label>
+              <div class="relative rounded-xl">
+                <input type="number" id="loan-amount" value="10000" min="1" step="any" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+              </div>
+              <p id="loan-amount-error" class="hidden text-xs text-rose-500 mt-1.5 font-medium"></p>
+            </div>
+
+            <div>
+              <label for="interest-rate" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1" data-i18n="interest_rate">Annual Interest Rate (%)</label>
+              <input type="number" id="interest-rate" value="12" min="0" step="any" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+              <p id="interest-rate-error" class="hidden text-xs text-rose-500 mt-1.5 font-medium"></p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label for="loan-term" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1" data-i18n="loan_term">Loan Term</label>
+                <input type="number" id="loan-term" value="12" min="1" step="1" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                <p id="loan-term-error" class="hidden text-xs text-rose-500 mt-1.5 font-medium"></p>
+              </div>
+              <div>
+                <label for="term-unit" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1">&nbsp;</label>
+                <select id="term-unit" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                  <option value="months" data-i18n="term_months">Months</option>
+                  <option value="years" data-i18n="term_years">Years</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label for="payment-frequency" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1" data-i18n="payment_frequency">Payment Frequency</label>
+              <select id="payment-frequency" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                <option value="daily" data-i18n="freq_daily">Daily (365/yr)</option>
+                <option value="weekly" data-i18n="freq_weekly">Weekly (52/yr)</option>
+                <option value="biweekly" data-i18n="freq_biweekly">Bi-weekly (26/yr)</option>
+                <option value="monthly" selected data-i18n="freq_monthly">Monthly (12/yr)</option>
+                <option value="quarterly" data-i18n="freq_quarterly">Quarterly (4/yr)</option>
+                <option value="semiannually" data-i18n="freq_semiannually">Semi-annually (2/yr)</option>
+                <option value="annually" data-i18n="freq_annually">Annually (1/yr)</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="start-date" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1" data-i18n="start_date">Start Date</label>
+              <input type="date" id="start-date" required class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+              <p id="start-date-error" class="hidden text-xs text-rose-500 mt-1.5 font-medium"></p>
+            </div>
+
+            <div class="border-t border-slate-200 dark:border-slate-800 pt-3">
+              <button type="button" id="advanced-toggle" class="flex items-center justify-between w-full text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 py-1 transition-colors">
+                <span data-i18n="advanced_options">Advanced Options</span>
+                <svg id="advanced-icon" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                </svg>
+              </button>
+
+              <div id="advanced-options-body" class="hidden mt-4 space-y-4">
+                <div>
+                  <label for="extra-payment" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" data-i18n="extra_payment">Extra Payment per Period</label>
+                  <input type="number" id="extra-payment" value="0" min="0" step="any" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                  <p id="extra-payment-error" class="hidden text-xs text-rose-500 mt-1.5 font-medium"></p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label for="processing-fee" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" data-i18n="processing_fee">Processing Fee</label>
+                    <input type="number" id="processing-fee" value="0" min="0" step="any" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                  </div>
+                  <div>
+                    <label for="origination-fee" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" data-i18n="origination_fee">Origination Fee</label>
+                    <input type="number" id="origination-fee" value="0" min="0" step="any" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                  </div>
+                  <div>
+                    <label for="insurance-fee" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" data-i18n="insurance_fee">Insurance Fee</label>
+                    <input type="number" id="insurance-fee" value="0" min="0" step="any" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div id="grace-period-group">
+                    <label for="grace-period" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" data-i18n="grace_period">Grace Period (Periods)</label>
+                    <input type="number" id="grace-period" value="0" min="0" step="1" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                  </div>
+                  <div id="balloon-payment-group">
+                    <label for="balloon-payment" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" data-i18n="balloon_payment">Balloon Payment</label>
+                    <input type="number" id="balloon-payment" value="0" min="0" step="any" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="pt-2 flex items-center gap-3">
+              <button type="submit" id="calculate-btn" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-xl shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900" data-i18n="calculate_btn">Calculate Loan</button>
+              <button type="button" id="reset-btn" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold py-2.5 px-4 rounded-xl border border-slate-200 dark:border-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-slate-400" data-i18n="reset_btn">Reset</button>
+            </div>
+          </div>
+        </form>
+      </section>
+
+      <section class="lg:col-span-7 space-y-6">
+        <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl p-6 sm:p-7 shadow-md">
+          <p id="periodic-payment-label" class="text-xs uppercase tracking-wider text-blue-100 font-semibold" data-i18n="summary_periodic_payment">Monthly Payment</p>
+          <div class="mt-2 flex items-baseline gap-2">
+            <span id="periodic-payment-amount" class="text-3xl sm:text-4xl font-extrabold tracking-tight">$888.49</span>
+          </div>
+          <div class="mt-4 pt-4 border-t border-blue-500/40 grid grid-cols-2 gap-4 text-xs">
+            <div>
+              <span class="text-blue-100 block" data-i18n="summary_payoff_date">Estimated Payoff Date</span>
+              <span id="summary-payoff-date" class="font-semibold text-white text-sm mt-0.5 block">-</span>
+            </div>
+            <div>
+              <span class="text-blue-100 block" data-i18n="summary_num_payments">Number of Payments</span>
+              <span id="summary-payments-count" class="font-semibold text-white text-sm mt-0.5 block">12</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="extra-savings-card" class="hidden bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 rounded-xl p-4 flex items-center gap-3 text-emerald-800 dark:text-emerald-300 text-sm">
+          <svg class="w-5 h-5 flex-shrink-0 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+          </svg>
+          <div>
+            <span class="font-bold block" data-i18n="interest_savings">Extra Payment Savings</span>
+            <span id="extra-savings-message" class="text-xs text-emerald-700 dark:text-emerald-400"></span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
+            <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium" data-i18n="summary_total_principal">Total Principal</span>
+            <span id="summary-principal" class="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">$10,000.00</span>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
+            <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium" data-i18n="summary_total_interest">Total Interest</span>
+            <span id="summary-interest" class="text-lg font-bold text-amber-600 dark:text-amber-400 mt-1 block">$661.88</span>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
+            <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium" data-i18n="summary_total_repayment">Total Repayment</span>
+            <span id="summary-repayment" class="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">$10,661.88</span>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
+            <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium" data-i18n="summary_total_fees">Total Upfront Fees</span>
+            <span id="summary-fees" class="text-lg font-bold text-slate-700 dark:text-slate-300 mt-1 block">$0.00</span>
+          </div>
+
+          <div class="col-span-2 sm:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4">
+            <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium" data-i18n="summary_effective_cost">Total Cost (Repayment + Fees)</span>
+            <span id="summary-cost" class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mt-1 block">$10,661.88</span>
+          </div>
+        </div>
+
+        <div class="no-print grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3" data-i18n="chart_breakdown_title">Principal vs Interest</h3>
+            <div class="h-48 relative">
+              <canvas id="breakdown-chart"></canvas>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-5">
+            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3" data-i18n="chart_balance_title">Remaining Balance Over Time</h3>
+            <div class="h-48 relative">
+              <canvas id="balance-chart"></canvas>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section class="mt-12 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm p-6">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-slate-800">
+        <div>
+          <h2 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="schedule_title">Payment Schedule</h2>
+        </div>
+        <div class="no-print flex items-center gap-2">
+          <button type="button" id="toggle-schedule-btn" class="text-xs font-medium bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors" data-i18n="schedule_toggle_hide">Hide Schedule</button>
+          <button type="button" id="export-csv-btn" class="text-xs font-medium bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors" data-i18n="export_csv">Export CSV</button>
+          <button type="button" id="print-btn" class="text-xs font-medium bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-300 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800 transition-colors" data-i18n="print">Print</button>
+        </div>
+      </div>
+
+      <div id="schedule-section-content" class="mt-4 overflow-x-auto max-h-[600px] overflow-y-auto">
+        <table class="w-full text-left border-collapse">
+          <thead class="sticky top-0 bg-slate-100/95 dark:bg-slate-800/95 backdrop-blur z-10 border-b border-slate-200 dark:border-slate-700 text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+            <tr>
+              <th class="py-3 px-4" data-i18n="col_num">#</th>
+              <th class="py-3 px-4" data-i18n="col_date">Date</th>
+              <th class="py-3 px-4 text-right" data-i18n="col_payment">Payment</th>
+              <th class="py-3 px-4 text-right" data-i18n="col_principal">Principal</th>
+              <th class="py-3 px-4 text-right" data-i18n="col_interest">Interest</th>
+              <th class="py-3 px-4 text-right" data-i18n="col_extra">Extra Payment</th>
+              <th class="py-3 px-4 text-right" data-i18n="col_balance">Remaining Balance</th>
+            </tr>
+          </thead>
+          <tbody id="schedule-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 font-normal">
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="js/localization.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/calculations.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
