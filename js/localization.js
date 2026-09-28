@@ -86,7 +86,10 @@ const translations = {
     interest_savings: "Extra Payment Savings",
     term_reduction: "Term Shortened By",
     periods_saved: ":count payments saved",
-    interest_saved_amount: ":amount saved in interest"
+    interest_saved_amount: ":amount saved in interest",
+    meta_title: "Loan Calculator - Free Amortization & Repayment Calculator",
+    meta_description: "Free online loan calculator with amortization schedules, interactive charts, and payment breakdowns. Supports reducing balance, flat rate, interest-only, bullet, and simple loans.",
+    meta_keywords: "loan calculator, amortization schedule, mortgage calculator, monthly payment calculator, interest calculator, reducing balance loan, flat rate loan, loan repayment, loan amortization"
   },
   km: {
     app_title: "ម៉ាស៊ីនគណនាប្រាក់កម្ចី",
@@ -175,7 +178,10 @@ const translations = {
     interest_savings: "ការសន្សំការប្រាក់ពីការបង់បន្ថែម",
     term_reduction: "រយៈពេលត្រូវបានកាត់បន្ថយ",
     periods_saved: "កាត់បន្ថយបាន :count លើក",
-    interest_saved_amount: "សន្សំការប្រាក់បាន :amount"
+    interest_saved_amount: "សន្សំការប្រាក់បាន :amount",
+    meta_title: "ម៉ាស៊ីនគណនាប្រាក់កម្ចី - គណនាកាលវិភាគបង់រំលស់ឥតគិតថ្លៃ",
+    meta_description: "ម៉ាស៊ីនគណនាប្រាក់កម្ចីឥតគិតថ្លៃ ជាមួយតារាងកាលវិភាគបង់រំលស់ គំនូសតាង និងគាំទ្រកម្ចីបង់រំលស់ ការប្រាក់ថេរ កម្ចីបង់តែការប្រាក់ និងទូទាត់ចុងគ្រា។",
+    meta_keywords: "ម៉ាស៊ីនគណនាប្រាក់កម្ចី, គណនាប្រាក់កម្ចី, តារាងបង់រំលស់, កម្ចីការប្រាក់ថយចុះ, កម្ចីការប្រាក់ថេរ, គណនាការប្រាក់, ការប្រាក់កម្ចី"
   }
 };
 
@@ -229,6 +235,26 @@ function applyTranslations() {
     const key = el.getAttribute("data-i18n-aria");
     el.setAttribute("aria-label", t(key));
   });
+
+  document.querySelectorAll("[data-i18n-content]").forEach((el) => {
+    const key = el.getAttribute("data-i18n-content");
+    el.setAttribute("content", t(key));
+  });
+
+  const ogLocale = document.querySelector('meta[property="og:locale"]');
+  if (ogLocale) {
+    ogLocale.setAttribute("content", currentLanguage === "km" ? "km_KH" : "en_US");
+  }
+
+  const jsonLd = document.getElementById("json-ld-schema");
+  if (jsonLd) {
+    try {
+      const data = JSON.parse(jsonLd.textContent);
+      data.name = t("app_title");
+      data.description = t("meta_description");
+      jsonLd.textContent = JSON.stringify(data, null, 2);
+    } catch (_) {}
+  }
 
   const event = new CustomEvent("languageChanged", { detail: { lang: currentLanguage } });
   document.dispatchEvent(event);

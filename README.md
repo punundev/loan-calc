@@ -49,6 +49,11 @@ A modern, fast, and responsive static web application for calculating and analyz
   - Preference saved in `localStorage`.
 - **Print & Save as PDF**:
   - Enhanced print stylesheet (`@media print`) rendering clean, unclipped tabular reports with native browser "Save as PDF" and physical printing support.
+- **SEO & Social Sharing Metadata**:
+  - Comprehensive Open Graph (OG) and Twitter Card tags for rich link previews.
+  - Dynamic multilingual meta tags (title, description, keywords, og:locale) synchronized with the active language (English / Khmer).
+  - JSON-LD Structured Data (`WebApplication` Schema.org) for search engine discovery and indexing.
+  - Mobile web app settings, adaptive theme colors (`light` / `dark`), and touch icons.
 - **Zero Dependencies / No Build Step**:
   - Runs in any modern browser by directly opening `index.html`.
 
