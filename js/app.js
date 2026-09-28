@@ -74,6 +74,14 @@ function initCurrency() {
   if (currencySelect) {
     currencySelect.value = saved;
   }
+  updateCurrencyToggleDisplay(saved);
+}
+
+function updateCurrencyToggleDisplay(currency) {
+  const symbolEl = document.getElementById("currency-symbol");
+  if (symbolEl) {
+    symbolEl.textContent = currency === "KHR" ? "៛" : "$";
+  }
 }
 
 function getSelectedCurrency() {
@@ -142,10 +150,33 @@ function setupEventListeners() {
     });
   }
 
+  const currencyToggleBtn = document.getElementById("currency-toggle-btn");
+  if (currencyToggleBtn) {
+    currencyToggleBtn.addEventListener("click", () => {
+      const currencyInput = document.getElementById("currency-selector");
+      const current = currencyInput ? currencyInput.value : "USD";
+      const next = current === "USD" ? "KHR" : "USD";
+      if (currencyInput) {
+        currencyInput.value = next;
+      }
+      localStorage.setItem("preferred_currency", next);
+      updateCurrencyToggleDisplay(next);
+      renderResults();
+    });
+  }
+
   const langSelect = document.getElementById("lang-selector");
   if (langSelect) {
     langSelect.addEventListener("change", (e) => {
       setLanguage(e.target.value);
+    });
+  }
+
+  const themeToggleBtn = document.getElementById("theme-toggle-btn");
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener("click", () => {
+      const isCurrentlyDark = document.documentElement.classList.contains("dark");
+      applyTheme(isCurrentlyDark ? "light" : "dark");
     });
   }
 
@@ -164,11 +195,6 @@ function setupEventListeners() {
   const toggleScheduleBtn = document.getElementById("toggle-schedule-btn");
   if (toggleScheduleBtn) {
     toggleScheduleBtn.addEventListener("click", toggleScheduleVisibility);
-  }
-
-  const exportPdfBtn = document.getElementById("export-pdf-btn");
-  if (exportPdfBtn) {
-    exportPdfBtn.addEventListener("click", handleExportPdf);
   }
 
   const printBtn = document.getElementById("print-btn");
@@ -549,159 +575,6 @@ function toggleScheduleVisibility() {
   toggleBtn.textContent = isHidden ? t("schedule_toggle_show") : t("schedule_toggle_hide");
 }
 
-function handleExportPdf() {
-  if (!currentCalculation || !currentCalculation.schedule.length) return;
-
-  const btn = document.getElementById("export-pdf-btn");
-  const originalText = btn ? btn.textContent : "";
-  if (btn) {
-    btn.disabled = true;
-    btn.textContent = getLanguage() === "km" ? "កំពុងទាញយក..." : "Generating PDF...";
-  }
-
-  const currency = getSelectedCurrency();
-  const lang = getLanguage();
-  const res = currentCalculation;
-  const loanTypeName = t(`loan_type_${document.getElementById("loan-type").value}`);
-  const frequencyName = t(`freq_${document.getElementById("payment-frequency").value}`);
-
-  const wrapper = document.createElement("div");
-  wrapper.id = "pdf-hidden-wrapper";
-  wrapper.style.width = "780px";
-  wrapper.style.height = "0";
-  wrapper.style.overflow = "hidden";
-  wrapper.style.position = "relative";
-
-  const reportContainer = document.createElement("div");
-  reportContainer.id = "pdf-report-container";
-  reportContainer.style.width = "780px";
-  reportContainer.style.padding = "12px";
-  reportContainer.style.backgroundColor = "#ffffff";
-  reportContainer.style.color = "#0f172a";
-  reportContainer.style.fontFamily = lang === "km" ? "'Kantumruy Pro', sans-serif" : "Inter, system-ui, sans-serif";
-  reportContainer.style.boxSizing = "border-box";
-
-  const rowsHtml = res.schedule.map(row => `
-    <tr style="page-break-inside: avoid; break-inside: avoid; border-bottom: 1px solid #e2e8f0; font-size: 11px; background-color: ${row.period % 2 === 0 ? '#f8fafc' : '#ffffff'};">
-      <td style="padding: 4px 6px; text-align: left; font-family: monospace;">${row.period}</td>
-      <td style="padding: 4px 6px; text-align: left; white-space: nowrap;">${formatDate(row.date, lang)}</td>
-      <td style="padding: 4px 6px; text-align: right; font-weight: 600;">${formatCurrency(row.payment, currency, lang)}</td>
-      <td style="padding: 4px 6px; text-align: right; color: #059669; font-weight: 500;">${formatCurrency(row.principal, currency, lang)}</td>
-      <td style="padding: 4px 6px; text-align: right; color: #d97706; font-weight: 500;">${formatCurrency(row.interest, currency, lang)}</td>
-      <td style="padding: 4px 6px; text-align: right; color: #4f46e5;">${row.extra > 0 ? formatCurrency(row.extra, currency, lang) : "-"}</td>
-      <td style="padding: 4px 6px; text-align: right; font-family: monospace;">${formatCurrency(row.balance, currency, lang)}</td>
-    </tr>
-  `).join("");
-
-  reportContainer.innerHTML = `
-    <div style="border-bottom: 2px solid #2563eb; padding-bottom: 8px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
-      <img src="assets/logo.png" style="width: 36px; height: 36px; object-fit: contain;" alt="Logo">
-      <div>
-        <h1 style="font-size: 18px; font-weight: bold; color: #1e3a8a; margin: 0;">${t("app_title")}</h1>
-        <p style="font-size: 11px; color: #64748b; margin: 2px 0 0 0;">${t("schedule_title")} • ${formatDate(new Date(), lang)}</p>
-      </div>
-    </div>
-
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; font-size: 11px;">
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px;">
-        <span style="color: #64748b; display: block; font-size: 10px;">${t("loan_type")}</span>
-        <strong style="color: #0f172a;">${loanTypeName}</strong>
-      </div>
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px;">
-        <span style="color: #64748b; display: block; font-size: 10px;">${t("summary_total_principal")}</span>
-        <strong style="color: #0f172a;">${formatCurrency(res.totalPrincipal, currency, lang)}</strong>
-      </div>
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px;">
-        <span style="color: #64748b; display: block; font-size: 10px;">${t("interest_rate")}</span>
-        <strong style="color: #0f172a;">${document.getElementById("interest-rate").value}%</strong>
-      </div>
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px;">
-        <span style="color: #64748b; display: block; font-size: 10px;">${t("payment_frequency")}</span>
-        <strong style="color: #0f172a;">${frequencyName}</strong>
-      </div>
-      <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 6px;">
-        <span style="color: #1e40af; display: block; font-size: 10px;">${t("col_payment")}</span>
-        <strong style="color: #1e3a8a;">${formatCurrency(res.initialPeriodicPayment || res.paymentAmount, currency, lang)}</strong>
-      </div>
-      <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 6px; padding: 6px;">
-        <span style="color: #92400e; display: block; font-size: 10px;">${t("summary_total_interest")}</span>
-        <strong style="color: #b45309;">${formatCurrency(res.totalInterest, currency, lang)}</strong>
-      </div>
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px;">
-        <span style="color: #64748b; display: block; font-size: 10px;">${t("summary_total_repayment")}</span>
-        <strong style="color: #0f172a;">${formatCurrency(res.totalRepayment, currency, lang)}</strong>
-      </div>
-      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px;">
-        <span style="color: #64748b; display: block; font-size: 10px;">${t("summary_payoff_date")}</span>
-        <strong style="color: #0f172a;">${formatDate(res.payoffDate, lang)}</strong>
-      </div>
-    </div>
-
-    <table style="width: 100%; border-collapse: collapse; text-align: left;">
-      <thead>
-        <tr style="background-color: #f1f5f9; border-bottom: 2px solid #cbd5e1; font-size: 10px; text-transform: uppercase;">
-          <th style="padding: 6px; border: 1px solid #cbd5e1;">${t("col_num")}</th>
-          <th style="padding: 6px; border: 1px solid #cbd5e1;">${t("col_date")}</th>
-          <th style="padding: 6px; border: 1px solid #cbd5e1; text-align: right;">${t("col_payment")}</th>
-          <th style="padding: 6px; border: 1px solid #cbd5e1; text-align: right;">${t("col_principal")}</th>
-          <th style="padding: 6px; border: 1px solid #cbd5e1; text-align: right;">${t("col_interest")}</th>
-          <th style="padding: 6px; border: 1px solid #cbd5e1; text-align: right;">${t("col_extra")}</th>
-          <th style="padding: 6px; border: 1px solid #cbd5e1; text-align: right;">${t("col_balance")}</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${rowsHtml}
-      </tbody>
-    </table>
-  `;
-
-  wrapper.appendChild(reportContainer);
-  document.body.appendChild(wrapper);
-
-  const cleanUp = () => {
-    if (wrapper && wrapper.parentNode) {
-      wrapper.parentNode.removeChild(wrapper);
-    }
-    if (btn) {
-      btn.disabled = false;
-      btn.textContent = originalText;
-    }
-  };
-
-  if (typeof html2pdf !== "undefined") {
-    const opt = {
-      margin: [6, 6, 6, 6],
-      filename: `loan-schedule-${new Date().toISOString().slice(0, 10)}.pdf`,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: {
-        scale: 2,
-        useCORS: true,
-        logging: false,
-        scrollY: 0,
-        scrollX: 0,
-        windowWidth: 780
-      },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      pagebreak: {
-        mode: ["avoid-all", "css", "legacy"],
-        avoid: "tr"
-      }
-    };
-
-    html2pdf()
-      .set(opt)
-      .from(reportContainer)
-      .save()
-      .then(cleanUp)
-      .catch(() => {
-        cleanUp();
-        window.print();
-      });
-  } else {
-    cleanUp();
-    window.print();
-  }
-}
 
 function resetCalculator() {
   try {
@@ -733,6 +606,7 @@ function resetCalculator() {
   if (currencySelect) {
     currencySelect.value = defaultState.currency;
     localStorage.setItem("preferred_currency", defaultState.currency);
+    updateCurrencyToggleDisplay(defaultState.currency);
   }
 
   initDefaultDates();

@@ -47,9 +47,8 @@ A modern, fast, and responsive static web application for calculating and analyz
 - **Theming**:
   - Light mode, Dark mode, and System mode detection (`prefers-color-scheme`).
   - Preference saved in `localStorage`.
-- **Export & Print**:
-  - Download PDF report with loan summary and complete schedule powered by `html2pdf.js`.
-  - Enhanced print stylesheet (`@media print`) rendering clean, unclipped tabular reports.
+- **Print & Save as PDF**:
+  - Enhanced print stylesheet (`@media print`) rendering clean, unclipped tabular reports with native browser "Save as PDF" and physical printing support.
 - **Zero Dependencies / No Build Step**:
   - Runs in any modern browser by directly opening `index.html`.
 
