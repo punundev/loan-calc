@@ -41,12 +41,16 @@ A modern, fast, and responsive static web application for calculating and analyz
   - US Dollar (USD `$`) with two decimal places.
   - Cambodian Riel (KHR `៛`) with integer formatting.
   - Currency conversion formatting powered by `Intl.NumberFormat`.
+- **Persistent Form State**:
+  - Automatically saves all input values (loan parameters, start date, advanced options, and accordion visibility) to `localStorage`.
+  - Seamlessly restores state upon page refresh and resets to defaults via the Reset button.
 - **Theming**:
   - Light mode, Dark mode, and System mode detection (`prefers-color-scheme`).
   - Preference saved in `localStorage`.
 - **Export & Print**:
+  - Download PDF report with loan summary and complete schedule powered by `html2pdf.js`.
   - CSV export generated directly in the browser (`loan-schedule-YYYY-MM-DD.csv`).
-  - Dedicated print stylesheet (`@media print`) rendering clean tabular reports.
+  - Enhanced print stylesheet (`@media print`) rendering clean, unclipped tabular reports.
 - **Zero Dependencies / No Build Step**:
   - Runs in any modern browser by directly opening `index.html`.
 

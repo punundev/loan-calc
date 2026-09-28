@@ -18,10 +18,13 @@ const defaultState = {
   currency: "USD"
 };
 
+const STORAGE_KEY = "loan_calculator_saved_inputs";
+
 document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initLanguage();
   initCurrency();
+  loadInputsFromStorage();
   initDefaultDates();
   setupEventListeners();
   handleLoanTypeChange();
@@ -94,6 +97,17 @@ function setupEventListeners() {
   if (form) {
     form.addEventListener("submit", (e) => {
       e.preventDefault();
+      saveInputsToStorage();
+      calculateAndRender();
+    });
+
+    form.addEventListener("input", () => {
+      saveInputsToStorage();
+      calculateAndRender();
+    });
+
+    form.addEventListener("change", () => {
+      saveInputsToStorage();
       calculateAndRender();
     });
   }
@@ -157,6 +171,11 @@ function setupEventListeners() {
     exportCsvBtn.addEventListener("click", handleExportCsv);
   }
 
+  const exportPdfBtn = document.getElementById("export-pdf-btn");
+  if (exportPdfBtn) {
+    exportPdfBtn.addEventListener("click", handleExportPdf);
+  }
+
   const printBtn = document.getElementById("print-btn");
   if (printBtn) {
     printBtn.addEventListener("click", () => {
@@ -174,6 +193,7 @@ function setupEventListeners() {
         if (icon) {
           icon.style.transform = isHidden ? "rotate(0deg)" : "rotate(180deg)";
         }
+        saveInputsToStorage();
       }
     });
   }
@@ -511,13 +531,13 @@ function renderScheduleTable(res, currency, lang) {
     tr.className = "hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors border-b border-slate-100 dark:border-slate-800 text-sm";
 
     tr.innerHTML = `
-      <td class="py-3 px-4 text-slate-500 dark:text-slate-400 font-mono text-xs">${row.period}</td>
-      <td class="py-3 px-4 font-medium text-slate-700 dark:text-slate-200 whitespace-nowrap">${formatDate(row.date, lang)}</td>
-      <td class="py-3 px-4 text-right font-semibold text-slate-900 dark:text-slate-100">${formatCurrency(row.payment, currency, lang)}</td>
-      <td class="py-3 px-4 text-right text-emerald-600 dark:text-emerald-400 font-medium">${formatCurrency(row.principal, currency, lang)}</td>
-      <td class="py-3 px-4 text-right text-amber-600 dark:text-amber-400 font-medium">${formatCurrency(row.interest, currency, lang)}</td>
-      <td class="py-3 px-4 text-right text-indigo-600 dark:text-indigo-400">${row.extra > 0 ? formatCurrency(row.extra, currency, lang) : "-"}</td>
-      <td class="py-3 px-4 text-right font-medium text-slate-700 dark:text-slate-300 font-mono text-xs">${formatCurrency(row.balance, currency, lang)}</td>
+      <td class="py-2.5 px-3 text-slate-500 dark:text-slate-400 font-mono text-xs">${row.period}</td>
+      <td class="py-2.5 px-3 font-medium text-slate-700 dark:text-slate-200 whitespace-nowrap">${formatDate(row.date, lang)}</td>
+      <td class="py-2.5 px-3 text-right font-semibold text-slate-900 dark:text-slate-100">${formatCurrency(row.payment, currency, lang)}</td>
+      <td class="py-2.5 px-3 text-right text-emerald-600 dark:text-emerald-400 font-medium">${formatCurrency(row.principal, currency, lang)}</td>
+      <td class="py-2.5 px-3 text-right text-amber-600 dark:text-amber-400 font-medium">${formatCurrency(row.interest, currency, lang)}</td>
+      <td class="py-2.5 px-3 text-right text-indigo-600 dark:text-indigo-400">${row.extra > 0 ? formatCurrency(row.extra, currency, lang) : "-"}</td>
+      <td class="py-2.5 px-3 text-right font-medium text-slate-700 dark:text-slate-300 font-mono text-xs">${formatCurrency(row.balance, currency, lang)}</td>
     `;
     frag.appendChild(tr);
   });
@@ -562,7 +582,136 @@ function handleExportCsv() {
   exportToCsv(`loan-schedule-${new Date().toISOString().slice(0, 10)}.csv`, headers, rows);
 }
 
+function handleExportPdf() {
+  if (!currentCalculation || !currentCalculation.schedule.length) return;
+
+  const btn = document.getElementById("export-pdf-btn");
+  const originalText = btn ? btn.textContent : "";
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = "...";
+  }
+
+  const currency = getSelectedCurrency();
+  const lang = getLanguage();
+  const res = currentCalculation;
+  const loanTypeName = t(`loan_type_${document.getElementById("loan-type").value}`);
+  const frequencyName = t(`freq_${document.getElementById("payment-frequency").value}`);
+
+  const reportContainer = document.createElement("div");
+  reportContainer.style.padding = "10px";
+  reportContainer.style.backgroundColor = "#ffffff";
+  reportContainer.style.color = "#0f172a";
+  reportContainer.style.fontFamily = lang === "km" ? "'Kantumruy Pro', sans-serif" : "Inter, system-ui, sans-serif";
+
+  const rowsHtml = res.schedule.map(row => `
+    <tr style="border-bottom: 1px solid #e2e8f0; font-size: 11px;">
+      <td style="padding: 4px 6px; text-align: left;">${row.period}</td>
+      <td style="padding: 4px 6px; text-align: left; white-space: nowrap;">${formatDate(row.date, lang)}</td>
+      <td style="padding: 4px 6px; text-align: right; font-weight: 600;">${formatCurrency(row.payment, currency, lang)}</td>
+      <td style="padding: 4px 6px; text-align: right; color: #059669;">${formatCurrency(row.principal, currency, lang)}</td>
+      <td style="padding: 4px 6px; text-align: right; color: #d97706;">${formatCurrency(row.interest, currency, lang)}</td>
+      <td style="padding: 4px 6px; text-align: right; color: #4f46e5;">${row.extra > 0 ? formatCurrency(row.extra, currency, lang) : "-"}</td>
+      <td style="padding: 4px 6px; text-align: right; font-weight: 500;">${formatCurrency(row.balance, currency, lang)}</td>
+    </tr>
+  `).join("");
+
+  reportContainer.innerHTML = `
+    <div style="border-bottom: 2px solid #2563eb; padding-bottom: 8px; margin-bottom: 10px;">
+      <h1 style="font-size: 18px; font-weight: bold; color: #1e3a8a; margin: 0;">${t("app_title")}</h1>
+      <p style="font-size: 11px; color: #64748b; margin: 2px 0 0 0;">${t("schedule_title")} • ${formatDate(new Date(), lang)}</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; font-size: 11px;">
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px;">
+        <span style="color: #64748b; display: block; font-size: 10px;">${t("loan_type")}</span>
+        <strong style="color: #0f172a;">${loanTypeName}</strong>
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px;">
+        <span style="color: #64748b; display: block; font-size: 10px;">${t("summary_total_principal")}</span>
+        <strong style="color: #0f172a;">${formatCurrency(res.totalPrincipal, currency, lang)}</strong>
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px;">
+        <span style="color: #64748b; display: block; font-size: 10px;">${t("interest_rate")}</span>
+        <strong style="color: #0f172a;">${document.getElementById("interest-rate").value}%</strong>
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px;">
+        <span style="color: #64748b; display: block; font-size: 10px;">${t("payment_frequency")}</span>
+        <strong style="color: #0f172a;">${frequencyName}</strong>
+      </div>
+      <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 6px; padding: 6px;">
+        <span style="color: #1e40af; display: block; font-size: 10px;">${t("col_payment")}</span>
+        <strong style="color: #1e3a8a;">${formatCurrency(res.initialPeriodicPayment || res.paymentAmount, currency, lang)}</strong>
+      </div>
+      <div style="background: #fef3c7; border: 1px solid #fde68a; border-radius: 6px; padding: 6px;">
+        <span style="color: #92400e; display: block; font-size: 10px;">${t("summary_total_interest")}</span>
+        <strong style="color: #b45309;">${formatCurrency(res.totalInterest, currency, lang)}</strong>
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px;">
+        <span style="color: #64748b; display: block; font-size: 10px;">${t("summary_total_repayment")}</span>
+        <strong style="color: #0f172a;">${formatCurrency(res.totalRepayment, currency, lang)}</strong>
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 6px;">
+        <span style="color: #64748b; display: block; font-size: 10px;">${t("summary_payoff_date")}</span>
+        <strong style="color: #0f172a;">${formatDate(res.payoffDate, lang)}</strong>
+      </div>
+    </div>
+
+    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+      <thead>
+        <tr style="background-color: #f1f5f9; border-bottom: 2px solid #cbd5e1; font-size: 10px; text-transform: uppercase;">
+          <th style="padding: 6px; border: 1px solid #cbd5e1;">${t("col_num")}</th>
+          <th style="padding: 6px; border: 1px solid #cbd5e1;">${t("col_date")}</th>
+          <th style="padding: 6px; border: 1px solid #cbd5e1; text-align: right;">${t("col_payment")}</th>
+          <th style="padding: 6px; border: 1px solid #cbd5e1; text-align: right;">${t("col_principal")}</th>
+          <th style="padding: 6px; border: 1px solid #cbd5e1; text-align: right;">${t("col_interest")}</th>
+          <th style="padding: 6px; border: 1px solid #cbd5e1; text-align: right;">${t("col_extra")}</th>
+          <th style="padding: 6px; border: 1px solid #cbd5e1; text-align: right;">${t("col_balance")}</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rowsHtml}
+      </tbody>
+    </table>
+  `;
+
+  if (typeof html2pdf !== "undefined") {
+    const opt = {
+      margin: [8, 8, 8, 8],
+      filename: `loan-schedule-${new Date().toISOString().slice(0, 10)}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true, logging: false },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      pagebreak: { mode: ["avoid-all", "css", "legacy"] }
+    };
+
+    html2pdf().set(opt).from(reportContainer).save().then(() => {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+    }).catch(() => {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = originalText;
+      }
+      window.print();
+    });
+  } else {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
+    window.print();
+  }
+}
+
 function resetCalculator() {
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {
+  }
+
   document.getElementById("loan-type").value = defaultState.loanType;
   document.getElementById("loan-amount").value = defaultState.loanAmount;
   document.getElementById("interest-rate").value = defaultState.interestRate;
@@ -576,6 +725,13 @@ function resetCalculator() {
   document.getElementById("grace-period").value = defaultState.gracePeriod;
   document.getElementById("balloon-payment").value = defaultState.balloonPayment;
 
+  const advancedBody = document.getElementById("advanced-options-body");
+  const icon = document.getElementById("advanced-icon");
+  if (advancedBody && !advancedBody.classList.contains("hidden")) {
+    advancedBody.classList.add("hidden");
+    if (icon) icon.style.transform = "rotate(0deg)";
+  }
+
   const currencySelect = document.getElementById("currency-selector");
   if (currencySelect) {
     currencySelect.value = defaultState.currency;
@@ -585,4 +741,62 @@ function resetCalculator() {
   initDefaultDates();
   handleLoanTypeChange();
   calculateAndRender();
+}
+
+function saveInputsToStorage() {
+  const advancedBody = document.getElementById("advanced-options-body");
+  const data = {
+    loanType: document.getElementById("loan-type")?.value,
+    loanAmount: document.getElementById("loan-amount")?.value,
+    interestRate: document.getElementById("interest-rate")?.value,
+    loanTerm: document.getElementById("loan-term")?.value,
+    termUnit: document.getElementById("term-unit")?.value,
+    frequency: document.getElementById("payment-frequency")?.value,
+    startDate: document.getElementById("start-date")?.value,
+    processingFee: document.getElementById("processing-fee")?.value,
+    originationFee: document.getElementById("origination-fee")?.value,
+    insuranceFee: document.getElementById("insurance-fee")?.value,
+    extraPayment: document.getElementById("extra-payment")?.value,
+    gracePeriod: document.getElementById("grace-period")?.value,
+    balloonPayment: document.getElementById("balloon-payment")?.value,
+    advancedOpen: advancedBody ? !advancedBody.classList.contains("hidden") : false
+  };
+
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch (e) {
+  }
+}
+
+function loadInputsFromStorage() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    if (!data || typeof data !== "object") return;
+
+    if (data.loanType !== undefined && document.getElementById("loan-type")) document.getElementById("loan-type").value = data.loanType;
+    if (data.loanAmount !== undefined && document.getElementById("loan-amount")) document.getElementById("loan-amount").value = data.loanAmount;
+    if (data.interestRate !== undefined && document.getElementById("interest-rate")) document.getElementById("interest-rate").value = data.interestRate;
+    if (data.loanTerm !== undefined && document.getElementById("loan-term")) document.getElementById("loan-term").value = data.loanTerm;
+    if (data.termUnit !== undefined && document.getElementById("term-unit")) document.getElementById("term-unit").value = data.termUnit;
+    if (data.frequency !== undefined && document.getElementById("payment-frequency")) document.getElementById("payment-frequency").value = data.frequency;
+    if (data.startDate !== undefined && document.getElementById("start-date")) document.getElementById("start-date").value = data.startDate;
+    if (data.processingFee !== undefined && document.getElementById("processing-fee")) document.getElementById("processing-fee").value = data.processingFee;
+    if (data.originationFee !== undefined && document.getElementById("origination-fee")) document.getElementById("origination-fee").value = data.originationFee;
+    if (data.insuranceFee !== undefined && document.getElementById("insurance-fee")) document.getElementById("insurance-fee").value = data.insuranceFee;
+    if (data.extraPayment !== undefined && document.getElementById("extra-payment")) document.getElementById("extra-payment").value = data.extraPayment;
+    if (data.gracePeriod !== undefined && document.getElementById("grace-period")) document.getElementById("grace-period").value = data.gracePeriod;
+    if (data.balloonPayment !== undefined && document.getElementById("balloon-payment")) document.getElementById("balloon-payment").value = data.balloonPayment;
+
+    if (data.advancedOpen) {
+      const advancedBody = document.getElementById("advanced-options-body");
+      const icon = document.getElementById("advanced-icon");
+      if (advancedBody) {
+        advancedBody.classList.remove("hidden");
+        if (icon) icon.style.transform = "rotate(180deg)";
+      }
+    }
+  } catch (e) {
+  }
 }
