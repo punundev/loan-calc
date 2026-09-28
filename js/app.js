@@ -166,11 +166,6 @@ function setupEventListeners() {
     toggleScheduleBtn.addEventListener("click", toggleScheduleVisibility);
   }
 
-  const exportCsvBtn = document.getElementById("export-csv-btn");
-  if (exportCsvBtn) {
-    exportCsvBtn.addEventListener("click", handleExportCsv);
-  }
-
   const exportPdfBtn = document.getElementById("export-pdf-btn");
   if (exportPdfBtn) {
     exportPdfBtn.addEventListener("click", handleExportPdf);
@@ -554,34 +549,6 @@ function toggleScheduleVisibility() {
   toggleBtn.textContent = isHidden ? t("schedule_toggle_show") : t("schedule_toggle_hide");
 }
 
-function handleExportCsv() {
-  if (!currentCalculation || !currentCalculation.schedule.length) return;
-
-  const currency = getSelectedCurrency();
-  const lang = getLanguage();
-  const headers = [
-    t("col_num"),
-    t("col_date"),
-    `${t("col_payment")} (${currency})`,
-    `${t("col_principal")} (${currency})`,
-    `${t("col_interest")} (${currency})`,
-    `${t("col_extra")} (${currency})`,
-    `${t("col_balance")} (${currency})`
-  ];
-
-  const rows = currentCalculation.schedule.map((row) => [
-    row.period,
-    formatDate(row.date, lang),
-    row.payment,
-    row.principal,
-    row.interest,
-    row.extra,
-    row.balance
-  ]);
-
-  exportToCsv(`loan-schedule-${new Date().toISOString().slice(0, 10)}.csv`, headers, rows);
-}
-
 function handleExportPdf() {
   if (!currentCalculation || !currentCalculation.schedule.length) return;
 
@@ -589,7 +556,7 @@ function handleExportPdf() {
   const originalText = btn ? btn.textContent : "";
   if (btn) {
     btn.disabled = true;
-    btn.textContent = "...";
+    btn.textContent = getLanguage() === "km" ? "កំពុងទាញយក..." : "Generating PDF...";
   }
 
   const currency = getSelectedCurrency();
@@ -598,28 +565,41 @@ function handleExportPdf() {
   const loanTypeName = t(`loan_type_${document.getElementById("loan-type").value}`);
   const frequencyName = t(`freq_${document.getElementById("payment-frequency").value}`);
 
+  const wrapper = document.createElement("div");
+  wrapper.id = "pdf-hidden-wrapper";
+  wrapper.style.width = "780px";
+  wrapper.style.height = "0";
+  wrapper.style.overflow = "hidden";
+  wrapper.style.position = "relative";
+
   const reportContainer = document.createElement("div");
-  reportContainer.style.padding = "10px";
+  reportContainer.id = "pdf-report-container";
+  reportContainer.style.width = "780px";
+  reportContainer.style.padding = "12px";
   reportContainer.style.backgroundColor = "#ffffff";
   reportContainer.style.color = "#0f172a";
   reportContainer.style.fontFamily = lang === "km" ? "'Kantumruy Pro', sans-serif" : "Inter, system-ui, sans-serif";
+  reportContainer.style.boxSizing = "border-box";
 
   const rowsHtml = res.schedule.map(row => `
-    <tr style="border-bottom: 1px solid #e2e8f0; font-size: 11px;">
-      <td style="padding: 4px 6px; text-align: left;">${row.period}</td>
+    <tr style="page-break-inside: avoid; break-inside: avoid; border-bottom: 1px solid #e2e8f0; font-size: 11px; background-color: ${row.period % 2 === 0 ? '#f8fafc' : '#ffffff'};">
+      <td style="padding: 4px 6px; text-align: left; font-family: monospace;">${row.period}</td>
       <td style="padding: 4px 6px; text-align: left; white-space: nowrap;">${formatDate(row.date, lang)}</td>
       <td style="padding: 4px 6px; text-align: right; font-weight: 600;">${formatCurrency(row.payment, currency, lang)}</td>
-      <td style="padding: 4px 6px; text-align: right; color: #059669;">${formatCurrency(row.principal, currency, lang)}</td>
-      <td style="padding: 4px 6px; text-align: right; color: #d97706;">${formatCurrency(row.interest, currency, lang)}</td>
+      <td style="padding: 4px 6px; text-align: right; color: #059669; font-weight: 500;">${formatCurrency(row.principal, currency, lang)}</td>
+      <td style="padding: 4px 6px; text-align: right; color: #d97706; font-weight: 500;">${formatCurrency(row.interest, currency, lang)}</td>
       <td style="padding: 4px 6px; text-align: right; color: #4f46e5;">${row.extra > 0 ? formatCurrency(row.extra, currency, lang) : "-"}</td>
-      <td style="padding: 4px 6px; text-align: right; font-weight: 500;">${formatCurrency(row.balance, currency, lang)}</td>
+      <td style="padding: 4px 6px; text-align: right; font-family: monospace;">${formatCurrency(row.balance, currency, lang)}</td>
     </tr>
   `).join("");
 
   reportContainer.innerHTML = `
-    <div style="border-bottom: 2px solid #2563eb; padding-bottom: 8px; margin-bottom: 10px;">
-      <h1 style="font-size: 18px; font-weight: bold; color: #1e3a8a; margin: 0;">${t("app_title")}</h1>
-      <p style="font-size: 11px; color: #64748b; margin: 2px 0 0 0;">${t("schedule_title")} • ${formatDate(new Date(), lang)}</p>
+    <div style="border-bottom: 2px solid #2563eb; padding-bottom: 8px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px;">
+      <img src="assets/logo.png" style="width: 36px; height: 36px; object-fit: contain;" alt="Logo">
+      <div>
+        <h1 style="font-size: 18px; font-weight: bold; color: #1e3a8a; margin: 0;">${t("app_title")}</h1>
+        <p style="font-size: 11px; color: #64748b; margin: 2px 0 0 0;">${t("schedule_title")} • ${formatDate(new Date(), lang)}</p>
+      </div>
     </div>
 
     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; font-size: 11px;">
@@ -675,33 +655,50 @@ function handleExportPdf() {
     </table>
   `;
 
-  if (typeof html2pdf !== "undefined") {
-    const opt = {
-      margin: [8, 8, 8, 8],
-      filename: `loan-schedule-${new Date().toISOString().slice(0, 10)}.pdf`,
-      image: { type: "jpeg", quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false },
-      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      pagebreak: { mode: ["avoid-all", "css", "legacy"] }
-    };
+  wrapper.appendChild(reportContainer);
+  document.body.appendChild(wrapper);
 
-    html2pdf().set(opt).from(reportContainer).save().then(() => {
-      if (btn) {
-        btn.disabled = false;
-        btn.textContent = originalText;
-      }
-    }).catch(() => {
-      if (btn) {
-        btn.disabled = false;
-        btn.textContent = originalText;
-      }
-      window.print();
-    });
-  } else {
+  const cleanUp = () => {
+    if (wrapper && wrapper.parentNode) {
+      wrapper.parentNode.removeChild(wrapper);
+    }
     if (btn) {
       btn.disabled = false;
       btn.textContent = originalText;
     }
+  };
+
+  if (typeof html2pdf !== "undefined") {
+    const opt = {
+      margin: [6, 6, 6, 6],
+      filename: `loan-schedule-${new Date().toISOString().slice(0, 10)}.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: {
+        scale: 2,
+        useCORS: true,
+        logging: false,
+        scrollY: 0,
+        scrollX: 0,
+        windowWidth: 780
+      },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      pagebreak: {
+        mode: ["avoid-all", "css", "legacy"],
+        avoid: "tr"
+      }
+    };
+
+    html2pdf()
+      .set(opt)
+      .from(reportContainer)
+      .save()
+      .then(cleanUp)
+      .catch(() => {
+        cleanUp();
+        window.print();
+      });
+  } else {
+    cleanUp();
     window.print();
   }
 }

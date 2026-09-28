@@ -49,7 +49,6 @@ A modern, fast, and responsive static web application for calculating and analyz
   - Preference saved in `localStorage`.
 - **Export & Print**:
   - Download PDF report with loan summary and complete schedule powered by `html2pdf.js`.
-  - CSV export generated directly in the browser (`loan-schedule-YYYY-MM-DD.csv`).
   - Enhanced print stylesheet (`@media print`) rendering clean, unclipped tabular reports.
 - **Zero Dependencies / No Build Step**:
   - Runs in any modern browser by directly opening `index.html`.
@@ -71,7 +70,7 @@ loan-calc/
 │   ├── app.js          # DOM manipulation, theme, and event orchestration
 │   ├── calculations.js # Mathematical calculation engine
 │   ├── localization.js # Translation dictionaries (EN & KM) and i18n helpers
-│   └── utils.js        # Formatting, dates, CSV export, and utilities
+│   └── utils.js        # Formatting, dates, and calculation utilities
 ├── Makefile            # Project helper targets
 ├── README.md           # Documentation
 └── task.md             # Specification document
