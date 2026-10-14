@@ -66,7 +66,32 @@ function initLanguage() {
   if (langSelect) {
     langSelect.value = lang;
   }
+  updateLanguageSwitcherUI(lang);
   applyTranslations();
+}
+
+function updateLanguageSwitcherUI(lang) {
+  const labelEl = document.getElementById("current-lang-label");
+  if (labelEl) {
+    labelEl.textContent = lang === "km" ? "ខ្មែរ" : "English";
+  }
+  const checkEn = document.getElementById("lang-check-en");
+  const checkKm = document.getElementById("lang-check-km");
+  if (checkEn) checkEn.classList.toggle("hidden", lang !== "en");
+  if (checkKm) checkKm.classList.toggle("hidden", lang !== "km");
+
+  const itemEn = document.getElementById("lang-item-en");
+  const itemKm = document.getElementById("lang-item-km");
+  if (itemEn) {
+    itemEn.className = lang === "en"
+      ? "flex items-center justify-between w-full py-1.5 px-2.5 font-semibold text-xs cursor-pointer bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 transition-colors"
+      : "flex items-center justify-between w-full py-1.5 px-2.5 font-normal text-xs cursor-pointer text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors";
+  }
+  if (itemKm) {
+    itemKm.className = lang === "km"
+      ? "flex items-center justify-between w-full py-1.5 px-2.5 font-semibold text-xs cursor-pointer bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 transition-colors"
+      : "flex items-center justify-between w-full py-1.5 px-2.5 font-normal text-xs cursor-pointer text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors";
+  }
 }
 
 function initCurrency() {
@@ -170,7 +195,41 @@ function setupEventListeners() {
   if (langSelect) {
     langSelect.addEventListener("change", (e) => {
       setLanguage(e.target.value);
+      updateLanguageSwitcherUI(e.target.value);
     });
+  }
+
+  const langDropdownBtn = document.getElementById("lang-dropdown-btn");
+  const langDropdownMenu = document.getElementById("lang-dropdown-menu");
+  if (langDropdownBtn && langDropdownMenu) {
+    langDropdownBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      langDropdownMenu.classList.toggle("hidden");
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!langDropdownMenu.contains(e.target) && !langDropdownBtn.contains(e.target)) {
+        langDropdownMenu.classList.add("hidden");
+      }
+    });
+
+    const btnEn = document.getElementById("lang-item-en");
+    if (btnEn) {
+      btnEn.addEventListener("click", () => {
+        setLanguage("en");
+        updateLanguageSwitcherUI("en");
+        langDropdownMenu.classList.add("hidden");
+      });
+    }
+
+    const btnKm = document.getElementById("lang-item-km");
+    if (btnKm) {
+      btnKm.addEventListener("click", () => {
+        setLanguage("km");
+        updateLanguageSwitcherUI("km");
+        langDropdownMenu.classList.add("hidden");
+      });
+    }
   }
 
   const themeToggleBtn = document.getElementById("theme-toggle-btn");
@@ -420,8 +479,9 @@ function renderCharts(res, currency, lang) {
   }
 
   const isDark = document.documentElement.classList.contains("dark");
-  const textColor = isDark ? "#cbd5e1" : "#475569";
-  const gridColor = isDark ? "rgba(255, 255, 255, 0.08)" : "rgba(0, 0, 0, 0.06)";
+  const textColor = isDark ? "#a1a1aa" : "#71717a";
+  const gridColor = isDark ? "rgba(255, 255, 255, 0.06)" : "rgba(0, 0, 0, 0.06)";
+  const fontFamily = "'Kantumruy Pro', system-ui, sans-serif";
 
   const breakdownCtx = document.getElementById("breakdown-chart");
   if (breakdownCtx) {
@@ -434,10 +494,10 @@ function renderCharts(res, currency, lang) {
         labels: [t("chart_legend_principal"), t("chart_legend_interest")],
         datasets: [{
           data: [res.totalPrincipal, res.totalInterest],
-          backgroundColor: ["#3b82f6", "#f59e0b"],
-          hoverBackgroundColor: ["#2563eb", "#d97706"],
+          backgroundColor: isDark ? ["#14b8a6", "#f59e0b"] : ["#0d9488", "#f59e0b"],
+          hoverBackgroundColor: isDark ? ["#2dd4bf", "#d97706"] : ["#0f766e", "#d97706"],
           borderWidth: 2,
-          borderColor: isDark ? "#1e293b" : "#ffffff"
+          borderColor: isDark ? "#121215" : "#ffffff"
         }]
       },
       options: {
@@ -448,7 +508,8 @@ function renderCharts(res, currency, lang) {
             position: "bottom",
             labels: {
               color: textColor,
-              font: { family: lang === "km" ? "Kantumruy Pro, sans-serif" : "Inter, sans-serif" }
+              boxWidth: 12,
+              font: { family: fontFamily, size: 11 }
             }
           },
           tooltip: {
@@ -487,11 +548,11 @@ function renderCharts(res, currency, lang) {
         datasets: [{
           label: t("chart_legend_balance"),
           data: dataPoints,
-          borderColor: "#10b981",
-          backgroundColor: "rgba(16, 185, 129, 0.12)",
+          borderColor: isDark ? "#14b8a6" : "#0d9488",
+          backgroundColor: isDark ? "rgba(20, 184, 166, 0.12)" : "rgba(13, 148, 136, 0.10)",
           fill: true,
           tension: 0.25,
-          pointRadius: sampledSchedule.length > 40 ? 0 : 3,
+          pointRadius: sampledSchedule.length > 40 ? 0 : 2.5,
           pointHoverRadius: 5
         }]
       },
@@ -508,7 +569,7 @@ function renderCharts(res, currency, lang) {
             ticks: {
               color: textColor,
               maxTicksLimit: 8,
-              font: { family: lang === "km" ? "Kantumruy Pro, sans-serif" : "Inter, sans-serif" }
+              font: { family: fontFamily, size: 10 }
             }
           },
           y: {
@@ -516,7 +577,7 @@ function renderCharts(res, currency, lang) {
             ticks: {
               color: textColor,
               callback: (val) => formatCurrency(val, currency, lang),
-              font: { family: lang === "km" ? "Kantumruy Pro, sans-serif" : "Inter, sans-serif" }
+              font: { family: fontFamily, size: 10 }
             }
           }
         },
@@ -546,21 +607,20 @@ function renderScheduleTable(res, currency, lang) {
   if (!tbody) return;
 
   tbody.innerHTML = "";
-
   const frag = document.createDocumentFragment();
 
   res.schedule.forEach((row) => {
     const tr = document.createElement("tr");
-    tr.className = "hover:bg-slate-50 dark:hover:bg-slate-800/60 transition-colors border-b border-slate-100 dark:border-slate-800 text-sm";
+    tr.className = "hover:bg-zinc-50/80 dark:hover:bg-zinc-900/50 transition-colors border-b border-zinc-200/60 dark:border-zinc-800/60 text-xs";
 
     tr.innerHTML = `
-      <td class="py-2.5 px-3 text-slate-500 dark:text-slate-400 font-mono text-xs">${row.period}</td>
-      <td class="py-2.5 px-3 font-medium text-slate-700 dark:text-slate-200 whitespace-nowrap">${formatDate(row.date, lang)}</td>
-      <td class="py-2.5 px-3 text-right font-semibold text-slate-900 dark:text-slate-100">${formatCurrency(row.payment, currency, lang)}</td>
-      <td class="py-2.5 px-3 text-right text-emerald-600 dark:text-emerald-400 font-medium">${formatCurrency(row.principal, currency, lang)}</td>
-      <td class="py-2.5 px-3 text-right text-amber-600 dark:text-amber-400 font-medium">${formatCurrency(row.interest, currency, lang)}</td>
-      <td class="py-2.5 px-3 text-right text-indigo-600 dark:text-indigo-400">${row.extra > 0 ? formatCurrency(row.extra, currency, lang) : "-"}</td>
-      <td class="py-2.5 px-3 text-right font-medium text-slate-700 dark:text-slate-300 font-mono text-xs">${formatCurrency(row.balance, currency, lang)}</td>
+      <td class="p-2 text-zinc-500 dark:text-zinc-400 font-mono text-[11px]">${row.period}</td>
+      <td class="p-2 font-medium text-zinc-700 dark:text-zinc-300 whitespace-nowrap">${formatDate(row.date, lang)}</td>
+      <td class="p-2 text-right font-semibold text-zinc-950 dark:text-zinc-100">${formatCurrency(row.payment, currency, lang)}</td>
+      <td class="p-2 text-right text-emerald-600 dark:text-emerald-400 font-medium">${formatCurrency(row.principal, currency, lang)}</td>
+      <td class="p-2 text-right text-amber-600 dark:text-amber-400 font-medium">${formatCurrency(row.interest, currency, lang)}</td>
+      <td class="p-2 text-right text-teal-600 dark:text-teal-400 font-medium">${row.extra > 0 ? formatCurrency(row.extra, currency, lang) : "-"}</td>
+      <td class="p-2 text-right font-medium text-zinc-700 dark:text-zinc-300 font-mono text-[11px]">${formatCurrency(row.balance, currency, lang)}</td>
     `;
     frag.appendChild(tr);
   });

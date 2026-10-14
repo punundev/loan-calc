@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="h-full">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,21 +15,21 @@
   <meta property="og:site_name" content="Loan Calculator" data-i18n-content="app_title">
   <meta property="og:title" content="Loan Calculator - Free Amortization & Repayment Calculator" data-i18n-content="meta_title">
   <meta property="og:description" content="Free online loan calculator with amortization schedules, interactive charts, and payment breakdowns. Supports reducing balance, flat rate, interest-only, bullet, and simple loans." data-i18n-content="meta_description">
-  <meta property="og:image" content="assets/logo.png">
+  <meta property="og:image" content="assets/media.png">
   <meta property="og:locale" content="en_US">
   <meta property="og:locale:alternate" content="km_KH">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Loan Calculator - Free Amortization & Repayment Calculator" data-i18n-content="meta_title">
   <meta name="twitter:description" content="Free online loan calculator with amortization schedules, interactive charts, and payment breakdowns. Supports reducing balance, flat rate, interest-only, bullet, and simple loans." data-i18n-content="meta_description">
-  <meta name="twitter:image" content="assets/logo.png">
-  <meta name="theme-color" content="#2563eb" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#020617" media="(prefers-color-scheme: dark)">
+  <meta name="twitter:image" content="assets/media.png">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#09090b" media="(prefers-color-scheme: dark)">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Loan Calculator" data-i18n-content="app_title">
   <meta name="application-name" content="Loan Calculator" data-i18n-content="app_title">
-  <link rel="icon" type="image/png" href="assets/logo.png">
-  <link rel="apple-touch-icon" href="assets/logo.png">
+  <link rel="icon" type="image/png" href="assets/media.png">
+  <link rel="apple-touch-icon" href="assets/media.png">
   <script type="application/ld+json" id="json-ld-schema">
   {
     "@context": "https://schema.org",
@@ -60,7 +60,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Kantumruy+Pro:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Kantumruy+Pro:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -68,8 +68,24 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
+            sans: ['"Kantumruy Pro"', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"Geist Mono"', 'monospace'],
             khmer: ['"Kantumruy Pro"', 'sans-serif']
+          },
+          colors: {
+            teal: {
+              50: '#f0fdfa',
+              100: '#ccfbf1',
+              200: '#99f6e4',
+              300: '#5eead4',
+              400: '#2dd4bf',
+              500: '#14b8a6',
+              600: '#0d9488',
+              700: '#0f766e',
+              800: '#115e59',
+              900: '#134e4a',
+              950: '#042f2e'
+            }
           }
         }
       }
@@ -86,10 +102,38 @@
       width: 0;
       height: 0;
     }
+    ::selection {
+      background-color: #0d9488;
+      color: #ffffff;
+    }
+    ::-moz-selection {
+      background-color: #0d9488;
+      color: #ffffff;
+    }
+    .dark ::selection {
+      background-color: #14b8a6;
+      color: #042f2e;
+    }
+    .dark ::-moz-selection {
+      background-color: #14b8a6;
+      color: #042f2e;
+    }
+    .grid-pattern {
+      background-image:
+        linear-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+    .dark .grid-pattern,
+    .dark.grid-pattern {
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    }
     @media print {
       body {
         background-color: #ffffff !important;
-        color: #0f172a !important;
+        color: #09090b !important;
       }
       .no-print {
         display: none !important;
@@ -110,60 +154,150 @@
         display: table-header-group !important;
       }
       th, td {
-        border: 1px solid #cbd5e1 !important;
-        color: #0f172a !important;
-        padding: 6px 8px !important;
+        border: 1px solid #e4e4e7 !important;
+        color: #09090b !important;
+        padding: 4px 6px !important;
       }
     }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 min-h-screen font-sans transition-colors duration-200">
+<body class="min-h-screen flex flex-col bg-zinc-100/70 dark:bg-zinc-950 text-zinc-950 dark:text-zinc-100 font-sans grid-pattern antialiased select-auto">
 
-  <header class="no-print border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-900/80 backdrop-blur sticky top-0 z-30">
-    <div class="max-w-7xl mx-auto px-3 h-16 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <img src="assets/logo.png" alt="Logo" class="w-9 h-9 rounded-lg object-contain shadow-sm">
-        <span class="text-lg font-bold text-slate-900 dark:text-white tracking-tight" data-i18n="app_title">Loan Calculator</span>
-      </div>
-
-      <div class="flex items-center gap-2 sm:gap-3">
-        <div>
-          <label for="lang-selector" class="sr-only" data-i18n="language">Language</label>
-          <select id="lang-selector" class="h-10 text-xs sm:text-sm font-medium bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg px-2.5 py-1.5 focus:outline-none focus:ring-2 focus:ring-blue-500 text-slate-700 dark:text-slate-200">
-            <option value="en">EN</option>
-            <option value="km">ខ្មែរ</option>
-          </select>
+  <!-- Header / Navbar matching Media Layout -->
+  <header class="no-print sticky top-0 z-50 w-full border-b border-zinc-200 dark:border-zinc-800 bg-white/95 dark:bg-zinc-950/95 backdrop-blur-md select-none">
+    <nav class="max-w-7xl mx-auto flex h-14 items-center justify-between px-4">
+      <!-- Brand -->
+      <a href="./" class="flex items-center gap-2.5 group">
+        <div class="relative size-10 rounded-lg overflow-hidden border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50 dark:bg-zinc-950 shadow-xs flex items-center justify-center shrink-0 transition-transform duration-200 group-hover:scale-105">
+          <img src="assets/media.png" alt="Logo" class="w-full h-full object-cover">
         </div>
+        <div class="flex flex-col">
+          <span class="font-semibold text-sm tracking-tight text-zinc-950 dark:text-zinc-100" data-i18n="app_title">Loan Calculator</span>
+          <span class="text-[10px] text-zinc-500 dark:text-zinc-400 -mt-0.5" data-i18n="toolbox">Toolbox</span>
+        </div>
+      </a>
 
-        <button type="button" id="theme-toggle-btn" class="h-10 w-10 flex items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer" aria-label="Toggle theme" title="Toggle theme">
-          <svg class="w-5 h-5 hidden dark:block text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
+      <!-- Right Controls: Theme Toggle & Language Switcher -->
+      <div class="flex items-center gap-1.5">
+        <!-- Theme Toggle Button -->
+        <button type="button" id="theme-toggle-btn" class="h-8 w-8 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-950/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 flex items-center justify-center transition-colors shadow-xs cursor-pointer" aria-label="Toggle Theme" title="Toggle Theme">
+          <svg id="theme-toggle-icon-dark" class="h-4 w-4 hidden dark:block text-amber-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
           </svg>
-          <svg class="w-5 h-5 block dark:hidden text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
+          <svg id="theme-toggle-icon-light" class="h-4 w-4 block dark:hidden text-zinc-700" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
           </svg>
         </button>
+
+        <!-- Language Switcher Dropdown matching Media -->
+        <div class="relative">
+          <button type="button" id="lang-dropdown-btn" class="h-8 px-2.5 rounded-md border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-950/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 inline-flex items-center gap-1.5 shadow-xs cursor-pointer" aria-label="Language Selector" title="Language">
+            <svg class="h-3.5 w-3.5 text-zinc-500 dark:text-zinc-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+            <span id="current-lang-label" class="text-xs font-medium">English</span>
+          </button>
+
+          <!-- Dropdown Menu -->
+          <div id="lang-dropdown-menu" class="hidden absolute right-0 top-full mt-1.5 w-36 py-1 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-md z-50 select-none">
+            <button type="button" id="lang-item-en" class="flex items-center justify-between w-full py-1.5 px-2.5 font-normal text-xs cursor-pointer text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+              <div class="flex items-center gap-2">
+                <span class="text-sm leading-none">🇬🇧</span>
+                <span>English</span>
+              </div>
+              <svg id="lang-check-en" class="h-3.5 w-3.5 text-teal-600 dark:text-teal-400 shrink-0 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </button>
+            <button type="button" id="lang-item-km" class="flex items-center justify-between w-full py-1.5 px-2.5 font-normal text-xs cursor-pointer text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors">
+              <div class="flex items-center gap-2">
+                <span class="text-sm leading-none">🇰🇭</span>
+                <span>ខ្មែរ</span>
+              </div>
+              <svg id="lang-check-km" class="h-3.5 w-3.5 text-teal-600 dark:text-teal-400 shrink-0 hidden" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <select id="lang-selector" class="sr-only">
+          <option value="en">English</option>
+          <option value="km">ខ្មែរ</option>
+        </select>
       </div>
-    </div>
+    </nav>
   </header>
 
-  <main class="max-w-7xl mx-auto px-3 py-3">
-    <div class="mb-3">
-      <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight" data-i18n="app_title">Loan Calculator</h1>
-      <p class="text-sm sm:text-base text-slate-500 dark:text-slate-400 mt-1" data-i18n="app_subtitle">Calculate, analyze, and plan your loan repayments with precision.</p>
+  <!-- Main Container -->
+  <main class="flex-1 w-full max-w-7xl mx-auto px-4 py-3 flex flex-col gap-3">
+
+    <!-- Tool Header matching ToolHeader component from media -->
+    <div class="w-full flex flex-col gap-1.5 pb-2.5 border-b border-zinc-200 dark:border-zinc-800">
+      <!-- Breadcrumb Navigation -->
+      <nav aria-label="Breadcrumb" class="flex items-center gap-1.5 text-xs text-zinc-500 dark:text-zinc-400 mb-0.5">
+        <a href="./" class="hover:text-zinc-950 dark:hover:text-zinc-100 transition-colors" data-i18n="breadcrumb_home">Home</a>
+        <svg class="h-3 w-3 text-zinc-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+        <span class="hover:text-zinc-950 dark:hover:text-zinc-100 transition-colors" data-i18n="breadcrumb_finance">Finance</span>
+        <svg class="h-3 w-3 text-zinc-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <polyline points="9 18 15 12 9 6"></polyline>
+        </svg>
+        <span class="text-zinc-950 dark:text-zinc-100 font-medium truncate" data-i18n="app_title">Loan Calculator</span>
+      </nav>
+
+      <!-- Main Semantic Heading & Privacy Badge -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div class="flex items-center gap-2 min-w-0">
+          <div class="rounded-md bg-teal-50 dark:bg-teal-950/40 p-1.5 text-teal-600 dark:text-teal-400 shrink-0">
+            <svg class="size-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect width="18" height="18" x="3" y="3" rx="2"></rect>
+              <line x1="8" x2="16" y1="7" y2="7"></line>
+              <line x1="8" x2="8" y1="11" y2="11"></line>
+              <line x1="12" x2="12" y1="11" y2="11"></line>
+              <line x1="16" x2="16" y1="11" y2="11"></line>
+              <line x1="8" x2="8" y1="15" y2="15"></line>
+              <line x1="12" x2="12" y1="15" y2="15"></line>
+              <line x1="16" x2="16" y1="15" y2="15"></line>
+            </svg>
+          </div>
+          <div class="min-w-0">
+            <h1 class="text-base font-semibold text-zinc-950 dark:text-zinc-100 truncate" data-i18n="app_title">Loan Calculator</h1>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400 truncate" data-i18n="app_subtitle">Calculate, analyze, and plan your loan repayments with precision.</p>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <span class="self-start sm:self-auto gap-1 text-[10px] font-normal py-0.5 px-2 bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800 rounded-full shrink-0 flex items-center shadow-xs">
+            <svg class="h-3 w-3 text-emerald-600 dark:text-emerald-400 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+              <path stroke-linecap="round" stroke-linejoin="round" d="m9 12 2 2 4-4"></path>
+            </svg>
+            <span data-i18n="privacy_badge">Client-Side Privacy</span>
+          </span>
+        </div>
+      </div>
     </div>
 
+    <!-- Main Calculator Two-Column Grid -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-3 items-start">
-      <section class="lg:col-span-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm p-3 no-print">
+
+      <!-- Left Column: Input Form Card -->
+      <section class="lg:col-span-5 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-950 dark:text-zinc-100 shadow-xs p-3 no-print">
         <form id="loan-form" novalidate>
           <div class="space-y-3">
+            <!-- Loan Type & Currency -->
             <div>
               <div class="flex items-center justify-between mb-1">
-                <label for="loan-type" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300" data-i18n="loan_type">Loan Type</label>
+                <label for="loan-type" class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400" data-i18n="loan_type">Loan Type</label>
                 <label for="currency-selector" class="sr-only" data-i18n="currency">Currency</label>
               </div>
-              <div class="flex items-center gap-2">
-                <select id="loan-type" class="h-10 flex-1 min-w-0 bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+              <div class="flex items-center gap-1.5">
+                <select id="loan-type" class="h-8 flex-1 min-w-0 bg-white dark:bg-zinc-950 border border-zinc-200 dark:border-zinc-800 rounded-md px-2.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500 font-medium">
                   <option value="reducing" data-i18n="loan_type_reducing">Amortized / Reducing Balance</option>
                   <option value="flat" data-i18n="loan_type_flat">Flat Rate</option>
                   <option value="interest_only" data-i18n="loan_type_interest_only">Interest-Only</option>
@@ -171,46 +305,48 @@
                   <option value="simple_interest" data-i18n="loan_type_simple">Simple Interest</option>
                   <option value="custom" data-i18n="loan_type_custom">Custom / Manual</option>
                 </select>
-                <button type="button" id="currency-toggle-btn" class="h-10 w-10 shrink-0 flex items-center justify-center rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-800 dark:text-slate-100 text-sm font-bold hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors cursor-pointer" aria-label="Toggle currency" title="Toggle USD ($) / KHR (៛)">
+                <button type="button" id="currency-toggle-btn" class="h-8 w-8 shrink-0 flex items-center justify-center rounded-md border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-950/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-teal-600 dark:text-teal-400 text-xs font-bold shadow-xs transition-colors cursor-pointer" aria-label="Toggle currency" title="Toggle USD ($) / KHR (៛)">
                   <span id="currency-symbol">$</span>
                 </button>
                 <input type="hidden" id="currency-selector" value="USD">
               </div>
-              <p id="loan-type-desc" class="text-xs text-slate-500 dark:text-slate-400 mt-2 leading-relaxed bg-slate-50 dark:bg-slate-800/60 p-2.5 rounded-lg border border-slate-100 dark:border-slate-800"></p>
+              <p id="loan-type-desc" class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-1.5 leading-relaxed bg-zinc-50 dark:bg-zinc-900/60 p-2 rounded-md border border-zinc-200/60 dark:border-zinc-800/60"></p>
             </div>
 
+            <!-- Loan Amount -->
             <div>
-              <label for="loan-amount" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1" data-i18n="loan_amount">Loan Amount</label>
-              <div class="relative rounded-xl">
-                <input type="number" id="loan-amount" value="10000" min="1" step="any" required class="h-10 w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
-              </div>
-              <p id="loan-amount-error" class="hidden text-xs text-rose-500 mt-1.5 font-medium"></p>
+              <label for="loan-amount" class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1" data-i18n="loan_amount">Loan Amount</label>
+              <input type="number" id="loan-amount" value="10000" min="1" step="any" required class="flex h-8 w-full rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-1.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500 font-medium placeholder:text-zinc-400">
+              <p id="loan-amount-error" class="hidden text-xs text-red-500 mt-1 font-medium"></p>
             </div>
 
+            <!-- Annual Interest Rate -->
             <div>
-              <label for="interest-rate" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1" data-i18n="interest_rate">Annual Interest Rate (%)</label>
-              <input type="number" id="interest-rate" value="12" min="0" step="any" required class="h-10 w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
-              <p id="interest-rate-error" class="hidden text-xs text-rose-500 mt-1.5 font-medium"></p>
+              <label for="interest-rate" class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1" data-i18n="interest_rate">Annual Interest Rate (%)</label>
+              <input type="number" id="interest-rate" value="12" min="0" step="any" required class="flex h-8 w-full rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-1.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500 font-medium placeholder:text-zinc-400">
+              <p id="interest-rate-error" class="hidden text-xs text-red-500 mt-1 font-medium"></p>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
+            <!-- Loan Term & Term Unit -->
+            <div class="grid grid-cols-2 gap-2">
               <div>
-                <label for="loan-term" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1" data-i18n="loan_term">Loan Term</label>
-                <input type="number" id="loan-term" value="12" min="1" step="1" required class="h-10 w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
-                <p id="loan-term-error" class="hidden text-xs text-rose-500 mt-1.5 font-medium"></p>
+                <label for="loan-term" class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1" data-i18n="loan_term">Loan Term</label>
+                <input type="number" id="loan-term" value="12" min="1" step="1" required class="flex h-8 w-full rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-1.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500 font-medium">
+                <p id="loan-term-error" class="hidden text-xs text-red-500 mt-1 font-medium"></p>
               </div>
               <div>
-                <label for="term-unit" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1">&nbsp;</label>
-                <select id="term-unit" class="h-10 w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                <label for="term-unit" class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1">&nbsp;</label>
+                <select id="term-unit" class="h-8 w-full rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-2.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500 font-medium">
                   <option value="months" data-i18n="term_months">Months</option>
                   <option value="years" data-i18n="term_years">Years</option>
                 </select>
               </div>
             </div>
 
+            <!-- Payment Frequency -->
             <div>
-              <label for="payment-frequency" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1" data-i18n="payment_frequency">Payment Frequency</label>
-              <select id="payment-frequency" class="h-10 w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+              <label for="payment-frequency" class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1" data-i18n="payment_frequency">Payment Frequency</label>
+              <select id="payment-frequency" class="h-8 w-full rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-2.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500 font-medium">
                 <option value="daily" data-i18n="freq_daily">Daily (365/yr)</option>
                 <option value="weekly" data-i18n="freq_weekly">Weekly (52/yr)</option>
                 <option value="biweekly" data-i18n="freq_biweekly">Bi-weekly (26/yr)</option>
@@ -221,170 +357,430 @@
               </select>
             </div>
 
+            <!-- Start Date -->
             <div>
-              <label for="start-date" class="block text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 mb-1" data-i18n="start_date">Start Date</label>
-              <input type="date" id="start-date" required class="h-10 w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
-              <p id="start-date-error" class="hidden text-xs text-rose-500 mt-1.5 font-medium"></p>
+              <label for="start-date" class="block text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 mb-1" data-i18n="start_date">Start Date</label>
+              <input type="date" id="start-date" required class="flex h-8 w-full rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-1.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500 font-medium">
+              <p id="start-date-error" class="hidden text-xs text-red-500 mt-1 font-medium"></p>
             </div>
 
-            <div class="border-t border-slate-200 dark:border-slate-800 pt-3">
-              <button type="button" id="advanced-toggle" class="flex items-center justify-between w-full text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 py-1 transition-colors">
+            <!-- Advanced Options Accordion -->
+            <div class="border-t border-zinc-200 dark:border-zinc-800 pt-2.5">
+              <button type="button" id="advanced-toggle" class="flex items-center justify-between w-full text-xs font-semibold uppercase tracking-wider text-zinc-600 dark:text-zinc-400 hover:text-teal-600 dark:hover:text-teal-400 py-1 transition-colors cursor-pointer">
                 <span data-i18n="advanced_options">Advanced Options</span>
-                <svg id="advanced-icon" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                <svg id="advanced-icon" class="w-4 h-4 transition-transform duration-200" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"></path>
                 </svg>
               </button>
 
-              <div id="advanced-options-body" class="hidden mt-3 space-y-3">
+              <div id="advanced-options-body" class="hidden mt-2.5 space-y-2.5">
                 <div>
-                  <label for="extra-payment" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" data-i18n="extra_payment">Extra Payment per Period</label>
-                  <input type="number" id="extra-payment" value="0" min="0" step="any" class="h-10 w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
-                  <p id="extra-payment-error" class="hidden text-xs text-rose-500 mt-1.5 font-medium"></p>
+                  <label for="extra-payment" class="block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1" data-i18n="extra_payment">Extra Payment per Period</label>
+                  <input type="number" id="extra-payment" value="0" min="0" step="any" class="flex h-8 w-full rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-1.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500">
+                  <p id="extra-payment-error" class="hidden text-xs text-red-500 mt-1 font-medium"></p>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div>
-                    <label for="processing-fee" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" data-i18n="processing_fee">Processing Fee</label>
-                    <input type="number" id="processing-fee" value="0" min="0" step="any" class="h-10 w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                    <label for="processing-fee" class="block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1" data-i18n="processing_fee">Processing Fee</label>
+                    <input type="number" id="processing-fee" value="0" min="0" step="any" class="flex h-8 w-full rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-1.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500">
                   </div>
                   <div>
-                    <label for="origination-fee" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" data-i18n="origination_fee">Origination Fee</label>
-                    <input type="number" id="origination-fee" value="0" min="0" step="any" class="h-10 w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                    <label for="origination-fee" class="block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1" data-i18n="origination_fee">Origination Fee</label>
+                    <input type="number" id="origination-fee" value="0" min="0" step="any" class="flex h-8 w-full rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-1.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500">
                   </div>
                   <div>
-                    <label for="insurance-fee" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" data-i18n="insurance_fee">Insurance Fee</label>
-                    <input type="number" id="insurance-fee" value="0" min="0" step="any" class="h-10 w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                    <label for="insurance-fee" class="block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1" data-i18n="insurance_fee">Insurance Fee</label>
+                    <input type="number" id="insurance-fee" value="0" min="0" step="any" class="flex h-8 w-full rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-1.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500">
                   </div>
                   <div>
-                    <label for="other-fee" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" data-i18n="other_fee">Other Fee</label>
-                    <input type="number" id="other-fee" value="0" min="0" step="any" class="h-10 w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                    <label for="other-fee" class="block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1" data-i18n="other_fee">Other Fee</label>
+                    <input type="number" id="other-fee" value="0" min="0" step="any" class="flex h-8 w-full rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-1.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500">
                   </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                   <div id="grace-period-group">
-                    <label for="grace-period" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" data-i18n="grace_period">Grace Period (Periods)</label>
-                    <input type="number" id="grace-period" value="0" min="0" step="1" class="h-10 w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                    <label for="grace-period" class="block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1" data-i18n="grace_period">Grace Period (Periods)</label>
+                    <input type="number" id="grace-period" value="0" min="0" step="1" class="flex h-8 w-full rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-1.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500">
                   </div>
                   <div id="balloon-payment-group">
-                    <label for="balloon-payment" class="block text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1" data-i18n="balloon_payment">Balloon Payment</label>
-                    <input type="number" id="balloon-payment" value="0" min="0" step="any" class="h-10 w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-slate-100">
+                    <label for="balloon-payment" class="block text-xs font-semibold uppercase tracking-wider text-zinc-500 dark:text-zinc-400 mb-1" data-i18n="balloon_payment">Balloon Payment</label>
+                    <input type="number" id="balloon-payment" value="0" min="0" step="any" class="flex h-8 w-full rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 px-3 py-1.5 text-xs text-zinc-950 dark:text-zinc-100 shadow-xs focus:outline-none focus:ring-1 focus:ring-teal-600 dark:focus:ring-teal-500">
                   </div>
                 </div>
               </div>
             </div>
 
-            <div class="pt-2 flex items-center gap-3">
-              <button type="submit" id="calculate-btn" class="h-10 flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold px-3 rounded-xl shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-slate-900" data-i18n="calculate_btn">Calculate Loan</button>
-              <button type="button" id="reset-btn" class="h-10 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-semibold px-3 rounded-xl border border-slate-200 dark:border-slate-700 transition-all focus:outline-none focus:ring-2 focus:ring-slate-400" data-i18n="reset_btn">Reset</button>
+            <!-- Action Buttons matching Media Button component -->
+            <div class="pt-2 flex items-center gap-2">
+              <button type="submit" id="calculate-btn" class="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md text-xs font-medium transition-colors focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-teal-600 bg-teal-600 text-white hover:bg-teal-700 dark:bg-teal-500 dark:text-zinc-950 dark:hover:bg-teal-400 shadow-xs h-8 px-3 flex-1 cursor-pointer" data-i18n="calculate_btn">Calculate Loan</button>
+              <button type="button" id="reset-btn" class="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md text-xs font-medium transition-colors border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-950/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 hover:text-zinc-950 dark:hover:text-zinc-100 shadow-xs h-8 px-3 cursor-pointer" data-i18n="reset_btn">Reset</button>
             </div>
           </div>
         </form>
       </section>
 
-      <section class="lg:col-span-7 space-y-3">
-        <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white rounded-2xl p-3 shadow-md">
-          <p id="periodic-payment-label" class="text-xs uppercase tracking-wider text-blue-100 font-semibold" data-i18n="summary_periodic_payment">Monthly Payment</p>
-          <div class="mt-2 flex items-baseline gap-2">
-            <span id="periodic-payment-amount" class="text-3xl sm:text-4xl font-extrabold tracking-tight">$888.49</span>
+      <!-- Right Column: Results & Analytics -->
+      <section class="lg:col-span-7 flex flex-col gap-2.5">
+
+        <!-- Hero Periodic Payment Card matching Media Card Styling -->
+        <div class="rounded-lg border border-teal-600/30 dark:border-teal-500/30 bg-teal-50/50 dark:bg-teal-950/20 text-zinc-950 dark:text-zinc-100 p-3 shadow-xs flex flex-col justify-between">
+          <div class="flex items-center justify-between text-teal-700 dark:text-teal-300 text-xs font-medium">
+            <span id="periodic-payment-label" data-i18n="summary_periodic_payment">Monthly Payment</span>
+            <svg class="h-4 w-4 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
           </div>
-          <div class="mt-3 pt-3 border-t border-blue-500/40 grid grid-cols-2 gap-3 text-xs">
+          <div class="mt-2 flex items-baseline gap-2">
+            <span id="periodic-payment-amount" class="text-2xl sm:text-3xl font-bold tracking-tight text-teal-700 dark:text-teal-300">$888.49</span>
+          </div>
+          <div class="mt-2.5 pt-2.5 border-t border-teal-200/50 dark:border-teal-900/50 grid grid-cols-2 gap-2 text-xs">
             <div>
-              <span class="text-blue-100 block" data-i18n="summary_payoff_date">Estimated Payoff Date</span>
-              <span id="summary-payoff-date" class="font-semibold text-white text-sm mt-0.5 block">-</span>
+              <span class="text-zinc-500 dark:text-zinc-400 block text-[11px]" data-i18n="summary_payoff_date">Estimated Payoff Date</span>
+              <span id="summary-payoff-date" class="font-semibold text-zinc-950 dark:text-zinc-100 text-xs mt-0.5 block">-</span>
             </div>
             <div>
-              <span class="text-blue-100 block" data-i18n="summary_num_payments">Number of Payments</span>
-              <span id="summary-payments-count" class="font-semibold text-white text-sm mt-0.5 block">12</span>
+              <span class="text-zinc-500 dark:text-zinc-400 block text-[11px]" data-i18n="summary_num_payments">Number of Payments</span>
+              <span id="summary-payments-count" class="font-semibold text-zinc-950 dark:text-zinc-100 text-xs mt-0.5 block">12</span>
             </div>
           </div>
         </div>
 
-        <div id="extra-savings-card" class="hidden bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/60 rounded-xl p-3 flex items-center gap-3 text-emerald-800 dark:text-emerald-300 text-sm">
-          <svg class="w-5 h-5 flex-shrink-0 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+        <!-- Extra Savings Card -->
+        <div id="extra-savings-card" class="hidden rounded-lg border border-emerald-200 dark:border-emerald-900/60 bg-emerald-50/80 dark:bg-emerald-950/30 p-2.5 flex items-center gap-2.5 text-emerald-800 dark:text-emerald-300 text-xs shadow-xs">
+          <svg class="w-4 h-4 shrink-0 text-emerald-600 dark:text-emerald-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+            <polyline points="17 6 23 6 23 12"></polyline>
           </svg>
           <div>
-            <span class="font-bold block" data-i18n="interest_savings">Extra Payment Savings</span>
-            <span id="extra-savings-message" class="text-xs text-emerald-700 dark:text-emerald-400"></span>
+            <span class="font-semibold block" data-i18n="interest_savings">Extra Payment Savings</span>
+            <span id="extra-savings-message" class="text-[11px] text-emerald-700 dark:text-emerald-400"></span>
           </div>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3">
-            <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium" data-i18n="summary_total_principal">Total Principal</span>
-            <span id="summary-principal" class="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">$10,000.00</span>
+        <!-- Metric Cards Grid matching Media Metric Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <!-- Total Principal -->
+          <div class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-2.5 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between text-zinc-500 text-xs">
+              <span data-i18n="summary_total_principal">Total Principal</span>
+              <svg class="h-3.5 w-3.5 text-zinc-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <rect width="20" height="14" x="2" y="5" rx="2"></rect>
+                <line x1="2" x2="22" y1="10" y2="10"></line>
+              </svg>
+            </div>
+            <span id="summary-principal" class="text-base sm:text-lg font-semibold tracking-tight text-zinc-950 dark:text-zinc-100 mt-1 block">$10,000.00</span>
           </div>
 
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3">
-            <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium" data-i18n="summary_total_interest">Total Interest</span>
-            <span id="summary-interest" class="text-lg font-bold text-amber-600 dark:text-amber-400 mt-1 block">$661.88</span>
+          <!-- Total Interest -->
+          <div class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-2.5 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between text-zinc-500 text-xs">
+              <span data-i18n="summary_total_interest">Total Interest</span>
+              <svg class="h-3.5 w-3.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+              </svg>
+            </div>
+            <span id="summary-interest" class="text-base sm:text-lg font-semibold tracking-tight text-amber-600 dark:text-amber-400 mt-1 block">$661.88</span>
           </div>
 
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3">
-            <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium" data-i18n="summary_total_repayment">Total Repayment</span>
-            <span id="summary-repayment" class="text-lg font-bold text-slate-900 dark:text-slate-100 mt-1 block">$10,661.88</span>
+          <!-- Total Repayment -->
+          <div class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-2.5 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between text-zinc-500 text-xs">
+              <span data-i18n="summary_total_repayment">Total Repayment</span>
+              <svg class="h-3.5 w-3.5 text-teal-600 dark:text-teal-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              </svg>
+            </div>
+            <span id="summary-repayment" class="text-base sm:text-lg font-semibold tracking-tight text-zinc-950 dark:text-zinc-100 mt-1 block">$10,661.88</span>
           </div>
 
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3">
-            <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium" data-i18n="summary_total_fees">Total Upfront Fees</span>
-            <span id="summary-fees" class="text-lg font-bold text-slate-700 dark:text-slate-300 mt-1 block">$0.00</span>
+          <!-- Upfront Fees -->
+          <div class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-2.5 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between text-zinc-500 text-xs">
+              <span data-i18n="summary_total_fees">Total Upfront Fees</span>
+              <svg class="h-3.5 w-3.5 text-zinc-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+            </div>
+            <span id="summary-fees" class="text-base sm:text-lg font-semibold tracking-tight text-zinc-700 dark:text-zinc-300 mt-1 block">$0.00</span>
           </div>
 
-          <div class="col-span-2 sm:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3">
-            <span class="text-xs text-slate-500 dark:text-slate-400 block font-medium" data-i18n="summary_effective_cost">Total Cost (Repayment + Fees)</span>
-            <span id="summary-cost" class="text-lg font-bold text-indigo-600 dark:text-indigo-400 mt-1 block">$10,661.88</span>
+          <!-- Total Cost (Repayment + Fees) -->
+          <div class="col-span-2 sm:col-span-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-2.5 shadow-xs flex flex-col justify-between">
+            <div class="flex items-center justify-between text-zinc-500 text-xs">
+              <span data-i18n="summary_effective_cost">Total Cost (Repayment + Fees)</span>
+              <span class="text-[10px] text-teal-600 dark:text-teal-400 font-medium">Principal + Interest + Fees</span>
+            </div>
+            <span id="summary-cost" class="text-base sm:text-lg font-semibold tracking-tight text-teal-600 dark:text-teal-400 mt-1 block">$10,661.88</span>
           </div>
         </div>
 
-        <div class="no-print grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3">
-            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3" data-i18n="chart_breakdown_title">Principal vs Interest</h3>
-            <div class="h-48 relative">
+        <!-- Visual Analytics Charts Row -->
+        <div class="no-print grid grid-cols-1 md:grid-cols-2 gap-2.5">
+          <div class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-3 shadow-xs">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-xs font-semibold text-zinc-950 dark:text-zinc-100" data-i18n="chart_breakdown_title">Principal vs Interest</h3>
+              <svg class="h-3.5 w-3.5 text-zinc-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21.21 15.89A10 10 0 1 1 8 2.83"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M22 12A10 10 0 0 0 12 2v10z"></path>
+              </svg>
+            </div>
+            <div class="h-44 relative">
               <canvas id="breakdown-chart"></canvas>
             </div>
           </div>
 
-          <div class="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3">
-            <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-3" data-i18n="chart_balance_title">Remaining Balance Over Time</h3>
-            <div class="h-48 relative">
+          <div class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-3 shadow-xs">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-xs font-semibold text-zinc-950 dark:text-zinc-100" data-i18n="chart_balance_title">Remaining Balance Over Time</h3>
+              <svg class="h-3.5 w-3.5 text-zinc-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+              </svg>
+            </div>
+            <div class="h-44 relative">
               <canvas id="balance-chart"></canvas>
             </div>
           </div>
         </div>
+
       </section>
     </div>
 
-    <section class="mt-3 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-sm p-3">
-      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 dark:border-slate-800">
+    <!-- Payment Schedule Section matching Media Table styling -->
+    <section class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-950 dark:text-zinc-100 shadow-xs p-3">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 pb-2.5 border-b border-zinc-200 dark:border-zinc-800">
         <div>
-          <h2 class="text-lg font-bold text-slate-900 dark:text-white" data-i18n="schedule_title">Payment Schedule</h2>
+          <h2 class="text-xs font-semibold tracking-tight text-zinc-950 dark:text-zinc-100" data-i18n="schedule_title">Payment Schedule</h2>
         </div>
-        <div class="no-print flex items-center gap-2">
-          <button type="button" id="toggle-schedule-btn" class="text-xs font-medium bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 transition-colors" data-i18n="schedule_toggle_hide">Hide Schedule</button>
-          <button type="button" id="print-btn" class="text-xs font-medium bg-blue-50 dark:bg-blue-950/60 hover:bg-blue-100 dark:hover:bg-blue-900 text-blue-600 dark:text-blue-300 px-3 py-1.5 rounded-lg border border-blue-200 dark:border-blue-800 transition-colors" data-i18n="print">Print</button>
+        <div class="no-print flex items-center gap-1.5">
+          <button type="button" id="toggle-schedule-btn" class="inline-flex items-center justify-center rounded-md text-xs font-medium border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-950/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 shadow-xs h-7 px-2.5 cursor-pointer transition-colors" data-i18n="schedule_toggle_hide">Hide Schedule</button>
+          <button type="button" id="print-btn" class="inline-flex items-center justify-center gap-1 rounded-md text-xs font-medium border border-teal-200 dark:border-teal-800/80 bg-teal-50 dark:bg-teal-950/40 hover:bg-teal-100 dark:hover:bg-teal-900/60 text-teal-700 dark:text-teal-300 shadow-xs h-7 px-2.5 cursor-pointer transition-colors" data-i18n="print">
+            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect width="12" height="8" x="6" y="14"></rect>
+            </svg>
+            <span data-i18n="print">Print</span>
+          </button>
         </div>
       </div>
 
-      <div id="schedule-section-content" class="mt-3 overflow-x-auto max-h-[600px] overflow-y-auto">
-        <table class="w-full text-left border-collapse">
-          <thead class="sticky top-0 bg-slate-100/95 dark:bg-slate-800/95 backdrop-blur z-10 border-b border-slate-200 dark:border-slate-700 text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-300">
+      <div id="schedule-section-content" class="mt-2.5 overflow-x-auto max-h-[500px] overflow-y-auto rounded-md border border-zinc-200 dark:border-zinc-800">
+        <table class="w-full text-left caption-bottom text-xs">
+          <thead class="sticky top-0 bg-zinc-50 dark:bg-zinc-900 z-10 border-b border-zinc-200 dark:border-zinc-800 text-[11px] font-semibold text-zinc-600 dark:text-zinc-400 uppercase tracking-wider">
             <tr>
-              <th class="py-2.5 px-3" data-i18n="col_num">#</th>
-              <th class="py-2.5 px-3" data-i18n="col_date">Date</th>
-              <th class="py-2.5 px-3 text-right" data-i18n="col_payment">Payment</th>
-              <th class="py-2.5 px-3 text-right" data-i18n="col_principal">Principal</th>
-              <th class="py-2.5 px-3 text-right" data-i18n="col_interest">Interest</th>
-              <th class="py-2.5 px-3 text-right" data-i18n="col_extra">Extra Payment</th>
-              <th class="py-2.5 px-3 text-right" data-i18n="col_balance">Remaining Balance</th>
+              <th class="p-2" data-i18n="col_num">#</th>
+              <th class="p-2" data-i18n="col_date">Date</th>
+              <th class="p-2 text-right" data-i18n="col_payment">Payment</th>
+              <th class="p-2 text-right" data-i18n="col_principal">Principal</th>
+              <th class="p-2 text-right" data-i18n="col_interest">Interest</th>
+              <th class="p-2 text-right" data-i18n="col_extra">Extra Payment</th>
+              <th class="p-2 text-right" data-i18n="col_balance">Remaining Balance</th>
             </tr>
           </thead>
-          <tbody id="schedule-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 font-normal">
+          <tbody id="schedule-table-body" class="divide-y divide-zinc-200/60 dark:divide-zinc-800/60">
           </tbody>
         </table>
       </div>
     </section>
+
+    <!-- Ecosystem / Other Products Section Cloned from Media other-products.tsx -->
+    <section class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-950 dark:text-zinc-100 shadow-xs p-3 flex flex-col gap-2.5 no-print">
+      <div class="flex flex-col">
+        <h2 class="text-xs font-semibold text-zinc-950 dark:text-zinc-100" data-i18n="ecosystem_title">Ecosystem Products</h2>
+        <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5" data-i18n="ecosystem_subtitle">Explore developer utilities and cloud services built for performance</p>
+      </div>
+
+      <div class="grid gap-2 sm:grid-cols-2">
+        <!-- Product 1: Nun App -->
+        <a href="https://acms.synergykh.online" target="_blank" rel="noreferrer" class="group rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950/60 p-2 transition-all duration-150 hover:border-teal-500/50 hover:shadow-xs flex items-center gap-2.5">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-md bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 group-hover:bg-teal-600 group-hover:text-white dark:group-hover:bg-teal-500 dark:group-hover:text-zinc-950 transition-colors">
+            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="text-xs font-semibold text-zinc-950 dark:text-zinc-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors truncate" data-i18n="eco_nun_app">Nun App</h3>
+              <svg class="h-3 w-3 text-zinc-400 opacity-60 group-hover:opacity-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-opacity" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </div>
+            <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 line-clamp-1" data-i18n="eco_nun_app_desc">A complete management app for modern workflow.</p>
+            <div class="text-[10px] text-teal-600 dark:text-teal-400 font-medium mt-0.5 truncate">acms.synergykh.online</div>
+          </div>
+        </a>
+
+        <!-- Product 2: NunAI -->
+        <a href="https://ai.synergykh.online" target="_blank" rel="noreferrer" class="group rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950/60 p-2 transition-all duration-150 hover:border-teal-500/50 hover:shadow-xs flex items-center gap-2.5">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-md bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 group-hover:bg-teal-600 group-hover:text-white dark:group-hover:bg-teal-500 dark:group-hover:text-zinc-950 transition-colors">
+            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m21 2-2 2m-6 6 2-2m-2 2v6m0-6h6m-9-2a4 4 0 1 1-8 0 4 4 0 0 1 8 0z"></path>
+            </svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="text-xs font-semibold text-zinc-950 dark:text-zinc-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors truncate" data-i18n="eco_nun_ai">NunAI</h3>
+              <svg class="h-3 w-3 text-zinc-400 opacity-60 group-hover:opacity-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-opacity" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </div>
+            <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 line-clamp-1" data-i18n="eco_nun_ai_desc">Smart AI assistant for content creation and automation.</p>
+            <div class="text-[10px] text-teal-600 dark:text-teal-400 font-medium mt-0.5 truncate">ai.synergykh.online</div>
+          </div>
+        </a>
+
+        <!-- Product 3: Portfolio -->
+        <a href="https://nun.synergykh.online" target="_blank" rel="noreferrer" class="group rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950/60 p-2 transition-all duration-150 hover:border-teal-500/50 hover:shadow-xs flex items-center gap-2.5">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-md bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 group-hover:bg-teal-600 group-hover:text-white dark:group-hover:bg-teal-500 dark:group-hover:text-zinc-950 transition-colors">
+            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="2" y1="12" x2="22" y2="12"></line>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+            </svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="text-xs font-semibold text-zinc-950 dark:text-zinc-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors truncate" data-i18n="eco_portfolio">Portfolio</h3>
+              <svg class="h-3 w-3 text-zinc-400 opacity-60 group-hover:opacity-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-opacity" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </div>
+            <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 line-clamp-1" data-i18n="eco_portfolio_desc">Personal portfolio showcasing projects and achievements.</p>
+            <div class="text-[10px] text-teal-600 dark:text-teal-400 font-medium mt-0.5 truncate">nun.synergykh.online</div>
+          </div>
+        </a>
+
+        <!-- Product 4: Nun Account -->
+        <a href="https://synergykh.online" target="_blank" rel="noreferrer" class="group rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950/60 p-2 transition-all duration-150 hover:border-teal-500/50 hover:shadow-xs flex items-center gap-2.5">
+          <div class="flex size-10 shrink-0 items-center justify-center rounded-md bg-teal-50 dark:bg-teal-950/40 text-teal-600 dark:text-teal-400 group-hover:bg-teal-600 group-hover:text-white dark:group-hover:bg-teal-500 dark:group-hover:text-zinc-950 transition-colors">
+            <svg class="size-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <rect width="18" height="11" x="3" y="11" rx="2" ry="2"></rect>
+              <path stroke-linecap="round" stroke-linejoin="round" d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+            </svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center justify-between gap-1">
+              <h3 class="text-xs font-semibold text-zinc-950 dark:text-zinc-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-colors truncate" data-i18n="eco_account">Nun Account</h3>
+              <svg class="h-3 w-3 text-zinc-400 opacity-60 group-hover:opacity-100 group-hover:text-teal-600 dark:group-hover:text-teal-400 transition-opacity" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </div>
+            <p class="text-[11px] text-zinc-500 dark:text-zinc-400 mt-0.5 line-clamp-1" data-i18n="eco_account_desc">Single sign-on and unified account management.</p>
+            <div class="text-[10px] text-teal-600 dark:text-teal-400 font-medium mt-0.5 truncate">synergykh.online</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- About Section Cloned from Media about-section.tsx -->
+    <section class="rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-950 dark:text-zinc-100 shadow-xs p-3 no-print">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+        <!-- Profile Card -->
+        <div class="md:col-span-4 flex justify-center">
+          <div class="overflow-hidden rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-1 shadow-xs w-full max-w-[200px]">
+            <img src="assets/me.jpg" alt="Suon Phanun" class="w-full aspect-square object-cover rounded-md">
+            <div class="p-2 text-center">
+              <h3 class="text-xs font-bold tracking-tight text-zinc-950 dark:text-zinc-100">Suon Phanun</h3>
+              <p class="text-[11px] text-teal-600 dark:text-teal-400 font-medium" data-i18n="about_dev_role">Software Developer</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story & Highlights -->
+        <div class="md:col-span-8 flex flex-col gap-2">
+          <div>
+            <div class="inline-block px-2 py-0.5 rounded-full bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 text-[10px] font-semibold tracking-wider uppercase mb-1" data-i18n="about_badge">About The Creator</div>
+            <h2 class="text-sm sm:text-base font-bold tracking-tight text-zinc-950 dark:text-zinc-100" data-i18n="about_subtitle">Building Fast, Secure, and Private Utilities</h2>
+            <p class="text-xs text-zinc-500 dark:text-zinc-400 mt-1 leading-relaxed" data-i18n="about_description">Designed and maintained as a fast, accessible financial web tool. Built with a focus on client-side privacy, minimal latency, and zero bloat so your loan calculations remain 100% private.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="p-2 rounded-md bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800 flex items-start gap-2">
+              <svg class="h-4 w-4 text-teal-600 dark:text-teal-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="4 17 10 11 4 5"></polyline>
+                <line x1="12" y1="19" x2="20" y2="19"></line>
+              </svg>
+              <div>
+                <h4 class="text-xs font-semibold text-zinc-950 dark:text-zinc-100" data-i18n="about_client_first">Client-Side First</h4>
+                <p class="text-[11px] text-zinc-500 dark:text-zinc-400" data-i18n="about_client_desc">All financial algorithms and charts execute directly in your browser with zero server uploads.</p>
+              </div>
+            </div>
+
+            <div class="p-2 rounded-md bg-zinc-50 dark:bg-zinc-800/50 border border-zinc-200 dark:border-zinc-800 flex items-start gap-2">
+              <svg class="h-4 w-4 text-teal-600 dark:text-teal-400 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="7"></circle>
+                <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+              </svg>
+              <div>
+                <h4 class="text-xs font-semibold text-zinc-950 dark:text-zinc-100" data-i18n="about_fast_secure">Instant & Offline-Ready</h4>
+                <p class="text-[11px] text-zinc-500 dark:text-zinc-400" data-i18n="about_fast_desc">Zero network latency, instant amortizations, and offline storage powered by local browser state.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-2 pt-1">
+            <a href="https://t.me/devphanun" target="_blank" rel="noreferrer" class="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md text-xs font-medium transition-colors bg-teal-600 text-white hover:bg-teal-700 dark:bg-teal-500 dark:text-zinc-950 dark:hover:bg-teal-400 shadow-xs h-7 px-2.5">
+              <span data-i18n="about_telegram">Telegram: @devphanun</span>
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <line x1="10" y1="14" x2="21" y2="3"></line>
+              </svg>
+            </a>
+            <a href="https://nun.synergykh.online" target="_blank" rel="noreferrer" class="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md text-xs font-medium transition-colors border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-950/50 hover:bg-zinc-100 dark:hover:bg-zinc-800 text-zinc-700 dark:text-zinc-300 shadow-xs h-7 px-2.5" data-i18n="about_portfolio">Portfolio</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
   </main>
+
+  <!-- Footer Cloned from Media footer.tsx -->
+  <footer class="no-print border-t border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-950/50 mt-auto select-none">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-zinc-500 dark:text-zinc-400">
+      <div class="flex items-center gap-3">
+        <span class="flex items-center gap-1 text-[11px]">
+          <svg class="h-3.5 w-3.5 text-emerald-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="m9 12 2 2 4-4"></path>
+          </svg>
+          <span data-i18n="privacy_badge">Client-Side Privacy</span>
+        </span>
+        <span class="flex items-center gap-1 text-[11px]">
+          <svg class="h-3.5 w-3.5 text-amber-500" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span data-i18n="zero_setup">Zero Setup</span>
+        </span>
+      </div>
+
+      <div class="flex items-center gap-2 text-[11px]">
+        <p>
+          <span data-i18n="footer_built_with">Built with</span>
+          <svg class="inline-block h-3 w-3 text-red-500 fill-red-500" viewBox="0 0 24 24">
+            <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"></path>
+          </svg>
+          <span data-i18n="footer_by">by</span>
+          <a href="https://t.me/devphanun" target="_blank" rel="noopener noreferrer" class="font-medium text-zinc-950 dark:text-zinc-100 hover:text-teal-600 dark:hover:text-teal-400 transition-colors">
+            Suon Phanun
+          </a>
+        </p>
+        <span class="text-zinc-300 dark:text-zinc-700">·</span>
+        <a href="https://t.me/devphanun" target="_blank" rel="noopener noreferrer" class="text-zinc-500 hover:text-teal-600 dark:hover:text-teal-400 transition-colors" data-i18n="footer_admin">Admin</a>
+      </div>
+    </div>
+  </footer>
 
   <script src="js/localization.js"></script>
   <script src="js/utils.js"></script>

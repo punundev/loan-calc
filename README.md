@@ -59,16 +59,30 @@ A modern, fast, and responsive static web application for calculating and analyz
 
 ## Technology Stack
 
+- **Design & Aesthetic**:
+  - Cloned from the [media](https://github.com/phanun/media) design system.
+  - Signature **Teal & Zinc** color palette (`teal-600` / `teal-500` accents on `zinc-100/70` and `zinc-950`).
+  - Subtle 40px linear background grid pattern (`.grid-pattern`).
+  - Compact, modern component hierarchy adhering to ≤ 20px spacing standards.
+  - Native dropdown language selector, outline theme toggle, and hero periodic payment card.
+  - **ToolHeader** with breadcrumbs and Client-Side Privacy badge.
+  - **Nun Ecosystem** showcase section linking to sister utilities and platforms.
+  - **About The Creator** profile card with verified assets.
+  - Responsive footer with privacy & zero setup indicators.
 - **HTML5**: Semantic and accessible markup.
 - **CSS / Styling**: [Tailwind CSS](https://tailwindcss.com) (via CDN) with dark mode class strategy.
-- **Typography**: Google Fonts ([Inter](https://fonts.google.com/specimen/Inter) and [Kantumruy Pro](https://fonts.google.com/specimen/Kantumruy+Pro)).
+- **Typography**: Google Fonts ([Kantumruy Pro](https://fonts.google.com/specimen/Kantumruy+Pro) and [Geist Mono](https://fonts.google.com/specimen/Geist+Mono)).
 - **JavaScript**: Pure Vanilla ES6+ without frameworks.
-- **Charting**: [Chart.js](https://www.chartjs.org) (via CDN).
+- **Charting**: [Chart.js](https://www.chartjs.org) (via CDN) themed to match teal & zinc tokens.
 
 ## Project Structure
 
 ```text
 loan-calc/
+├── assets/
+│   ├── logo.png        # Brand logo
+│   ├── media.png       # Media toolbox logo
+│   └── me.jpg          # Creator profile photo
 ├── index.html          # Main HTML structure and UI layout
 ├── js/
 │   ├── app.js          # DOM manipulation, theme, and event orchestration
@@ -93,11 +107,11 @@ open index.html     # On macOS
 ```bash
 make run
 ```
-This runs a local static HTTP server at `http://localhost:8000` using `python3` (or `npx serve`).
+This runs a local static HTTP server at `http://localhost:8000` using `python3` (or `pnpm dlx serve`).
 
 ### Available Makefile Targets
 - `make setup`: Verify local environment.
-- `make install`: Check required CLI tools.
+- `make install`: Check required CLI tools (python3 / pnpm).
 - `make run`: Launch local static HTTP server.
 - `make update`: Refresh or check assets.
 - `make clean`: Clean temporary files.
